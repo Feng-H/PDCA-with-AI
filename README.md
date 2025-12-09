@@ -2,6 +2,7 @@
 
 **基于PDCA循环的AI增强问题解决系统** - 专注于制造和质量管理领域的持续改进
 
+受到 https://github.com/Tasihi89/vibe-writing-workflow 项目的启发而开发,感谢 Tasihi89
 ---
 
 ## 🎯 系统简介
