@@ -104,11 +104,109 @@ PDCA知识空间（space_id 已在 SKILL.md 中记录）
 ### AI 主动操作
 - **创建项目**：`feishu_bitable_app_table_record.create`
 - **阶段转换**：`feishu_bitable_app_table_record.update` 更新「当前阶段」「阶段截止日」
-- **每日检查**：`feishu_bitable_app_table_record.update` 更新「完成度」「状态」
-- **超时预警**：AI 计算剩余天数，自动标记「预警/超时」状态
+- **自动巡检**：
+    1. **搜索待巡检记录**：使用 `feishu_bitable_app_table_record.search` 查找 `状态` 不等于 "已完成" 且 `项目名称` 匹配的项目。
+    2. **计算完成度**：AI 读取对应的 Wiki 文档和 Sheet 数据，根据阶段交付物清单计算 `完成度`（0-100）。
+    3. **状态判定**：
+        - 正常：当前日期 < 阶段截止日 且 进度符合预期。
+        - 预警：当前日期接近阶段截止日（如剩余 20% 时间）且 进度滞后。
+        - 超时：当前日期 > 阶段截止日。
+    4. **更新记录**：调用 `feishu_bitable_app_table_record.update` 更新「完成度」和「状态」字段。
 - ⚠️ **「剩余天数」不由公式计算**（Bitable 不支持公式字段），由 AI 每次巡检时计算后写入
 
-## 3. 飞书 Task（任务）— 阶段待办管理
+## 3. 飞书消息卡片（Interactive Cards）
+
+用于推送预警信息和交互确认。
+
+### 卡片 JSON 模板 (feishu-card)
+
+```json
+{
+  "config": {
+    "wide_screen_mode": true
+  },
+  "header": {
+    "title": {
+      "tag": "plain_text",
+      "content": "⚠️ PDCA 项目预警"
+    },
+    "template": "orange"
+  },
+  "elements": [
+    {
+      "tag": "div",
+      "text": {
+        "tag": "lark_md",
+        "content": "**项目名称**：${project_name}\n**当前阶段**：${current_phase}"
+      }
+    },
+    {
+      "tag": "div",
+      "fields": [
+        {
+          "is_short": false,
+          "text": {
+            "tag": "lark_md",
+            "content": "**预警原因**：\n${warning_reason}"
+          }
+        },
+        {
+          "is_short": true,
+          "text": {
+            "tag": "lark_md",
+            "content": "**当前值**：\n${current_value}"
+          }
+        },
+        {
+          "is_short": true,
+          "text": {
+            "tag": "lark_md",
+            "content": "**期望值**：\n${expected_value}"
+          }
+        }
+      ]
+    },
+    {
+      "tag": "hr"
+    },
+    {
+      "tag": "action",
+      "actions": [
+        {
+          "tag": "button",
+          "text": {
+            "tag": "plain_text",
+            "content": "确认/修改进度"
+          },
+          "type": "primary",
+          "multi_url": {
+            "url": "${wiki_url}",
+            "pc_url": "",
+            "android_url": "",
+            "ios_url": ""
+          }
+        },
+        {
+          "tag": "button",
+          "text": {
+            "tag": "plain_text",
+            "content": "查看项目 Wiki"
+          },
+          "type": "default",
+          "multi_url": {
+            "url": "${wiki_url}",
+            "pc_url": "",
+            "android_url": "",
+            "ios_url": ""
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+## 4. 飞书 Task（任务）— 阶段待办管理
 
 ### 创建项目时
 根据执行计划，用 `feishu_task_task.create` 创建飞书任务：

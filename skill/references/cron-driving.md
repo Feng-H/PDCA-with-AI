@@ -69,6 +69,30 @@ cron 创建/删除后，同步更新 `workspace/pdca-projects.json`：
 - 阶段转换时，更新/替换 cronJobs
 - 项目结束时，清除 cronJobs 并标记 status 为"已完成"
 
+## 巡检与预警逻辑 (Cron Job Logic)
+
+### 1. 每日巡检 (Daily Inspection)
+- **触发频率**：每天 09:00 (cron: `0 9 * * *`)
+- **执行步骤**：
+    1. **获取待办项目**：读取 `workspace/pdca-projects.json`，识别所有状态为 "进行中" 的项目。
+    2. **Bitable 状态同步**：调用 `feishu_bitable_app_table_record.search` 获取看板上的 `阶段截止日` 和当前 `完成度`。
+    3. **深度内容检查**：
+        - 调用 `feishu_fetch_doc` 获取对应阶段 Wiki 内容。
+        - 识别 Wiki 中任务列表的完成情况，结合里程碑进度计算实际 `完成度`（0-100）。
+        - 如涉及数据收集，调用 `feishu_sheet.read` 验证 Sheet 数据是否按时录入。
+    4. **偏差分析**：计算 `(当前日期 - 阶段开始日期) / (阶段截止日 - 阶段开始日期)` 得到时间进度，与 `完成度` 进行对比。
+    5. **自动更新看板**：调用 `feishu_bitable_app_table_record.update` 同步最新的 `完成度` 和 `状态` 到 Bitable 看板。
+
+### 2. 里程碑与到期预警 (Milestone & Due Warning)
+- **预警触发条件**：
+    - **时间维**：距离 `阶段截止日` 仅剩 2 天，或已过截止日。
+    - **进度维**：时间进度已过 80% 但 `完成度` 低于 60%。
+- **预警执行逻辑**：
+    - **正常巡检消息**：如果一切正常，发送文本消息概要。
+    - **触发预警卡片**：若满足预警条件，调用 `feishu_message.send`（通过消息卡片模板）推送预警。
+    - **自动状态调整**：在 Bitable 中将 `状态` 字段标记为 "预警" 或 "超时"。
+- **里程碑驱动**：里程碑到期当日，若交付物未就绪，强制发送交互式卡片要求确认原因。
+
 ## 隔离 agentTurn 的工作流
 
 每日提醒用 agentTurn（isolated session），任务流程：
