@@ -24,13 +24,27 @@ PDCA with AI 是一个**时间流驱动**的项目管理系统。它将经典 PD
 PDCA-with-AI/
 ├── pdca/               # OpenClaw Skill 包（前端接口层）
 │   ├── SKILL.md        # 符合 skill-creator 规范的主控文件
-│   └── references/     # 详细的执行指南与 API 集成规范
+│   ├── references/     # 详细的执行指南与 API 集成规范
+│   └── tests/          # 基线测试与质量验证
 ├── _系统/              # 核心引擎层（后端规范与逻辑）
 │   ├── Agent/          # Plan/Do/Check/Act 专业 Agent 提示词
 │   ├── 规范/            # SMART 校验与因果逻辑模组
 │   └── 经验库.md        # 组织知识沉淀
 └── 项目/               # 项目实例数据（本地映射）
 ```
+
+---
+
+## ✅ 质量标准
+
+本项目遵循 [superpowers:writing-skills](https://github.com/obra/superpowers) 标准：
+
+- **RED-GREEN-REFACTOR**：所有 skill 经过基线测试验证
+- **Rationalization 防御**：明确禁止 Agent 的常见违规理由
+- **Red Flags 机制**：识别何时需要停止并重新评估
+- **Token 效率**：主文件保持精简，详细内容分离到 references/
+
+测试文档：[pdca/tests/](pdca/tests/)
 
 ---
 
