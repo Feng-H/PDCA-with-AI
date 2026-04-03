@@ -1,0 +1,50 @@
+# 系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Claude 相关文件
+.claude/
+.claude-system-prompt.md
+
+# 临时文件
+*.tmp
+*.temp
+*.log
+*.bak
+*.swp
+*~
+
+# 编辑器/IDE 文件
+.vscode/
+.idea/
+*.sublime-*
+.atom/
+
+# macOS
+.AppleDouble
+.LSOverride
+
+# Windows
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# 项目特定文件（如果需要）
+# 项目/临时数据/
+# 项目/工作副本/
+# 项目/草稿/
+
+# 可选：排除敏感信息
+# 包含密码、密钥的文件
+# *.key
+# *.pem
+# *.p12
+# config/secrets/
