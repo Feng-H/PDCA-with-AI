@@ -74,13 +74,13 @@ PDCA知识空间
 
 各工具的详细集成逻辑、字段设计、AI 操作方式，参考 `references/feishu-integration.md`。
 
-### 5. 注册 cron 主动驱动任务
-创建项目后，必须创建以下 cron 任务：
-- **每日提醒**：每天 09:00，提醒当前阶段待办（agentTurn）
-- **阶段到期预警**：阶段计划结束前1天，提醒检查转换条件（systemEvent）
-- **里程碑到期**：里程碑当天提醒（systemEvent）
+### 5. 自动化 Cron 任务注册
+项目创建完成后，AI 将自动向控制器注册以下 Cron 任务，实现全自动化进度驱动：
+- **每日早报（Daily Reminder）**：每天 09:00 读取 Wiki 与 Bitable，通过卡片推送当前阶段待办及过期任务。
+- **阶段到期预警（Phase Pre-warning）**：在阶段计划结束前 24 小时，由控制器执行「Scrape-Load-Verify-Message」巡检循环，检测转换条件。
+- **里程碑触发器（Milestone Trigger）**：里程碑到期当日触发巡检，确保关键产出物已同步至 Wiki。
 
-参考 `references/cron-driving.md` 获取 cron 创建逻辑。
+参考 `references/cron-driving.md` 获取更底层的 Cron API 调用逻辑。
 
 ### 6. 告知用户
 - 告知知识库链接、看板链接
@@ -90,13 +90,15 @@ PDCA知识空间
 ## 主动驱动机制
 
 ### Cron 任务（按项目注册）
-每个项目创建独立的 cron 任务组，参考 `references/cron-driving.md`：
-- 每日09:00：读取项目信息，生成当前阶段提醒
-- 阶段到期前1天：检查完成度，提醒转换条件
-- 里程碑当天：提醒待交付内容
+详见「项目启动流程 - 5. 自动化 Cron 任务注册」。
 
 ### 进展判断（方案C）
-结合飞书全工具链读取和用户确认。详细操作流程参考 `references/feishu-integration.md` 中「数据流闭环」章节。
+基于 Bitable 仪表盘与 Wiki 内容的双向验证：
+- **Bitable 校验**：AI 定期读取 Bitable 的「验证状态」字段（Validating / Passed / Rejected），同步更新本地 JSON。
+- **文档比对**：将 Bitable 记录的进度与 Wiki 存档的文档版本号进行匹配，确保信息不泄露且一致。
+- **用户确认回环**：当 Bitable 显示「Passed」但 Wiki 缺少文件时，主动推送补全提示。
+
+详细操作流程参考 `references/feishu-integration.md` 中「数据流闭环」章节。
 
 ### Heartbeat 轻量检查
 在 HEARTBEAT.md 中加入 PDCA 检查项：
