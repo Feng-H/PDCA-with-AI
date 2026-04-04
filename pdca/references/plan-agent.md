@@ -4,10 +4,11 @@
 
 ### 1. 问题理解
 - 收集问题信息（表现、背景、影响、已尝试方案）
-- 问题分类：技术/管理/流程 | 紧急度 高/中/低 | 复杂度 简/中/复
+- 问题分类：技术/管理/流程/健康/效率 | 紧急度 高/中/低 | 复杂度 简/中/复
 - **根本原因分析（MECE 框架）**：
   - **制造业问题**：使用 **4M1E 框架**（Man/Machine/Material/Method/Environment）
-  - **管理问题**：使用 **PDCA 框架**（Plan/Do/Check/Act）
+  - **个人健康/体能提升问题**：使用 **TREND 框架**（Training/Rest/Eating/Nature/Daily）
+  - **管理问题**：使用 **5P2E 框架**（Plan/People/Process/Performance/Power/External/Environment）
   - **流程问题**：使用 **SIPOC 框架**（Supplier/Input/Process/Output/Customer）
   - **穷尽性扫描**：逐维度检查，确保不遗漏
   - **独立性验证**：确保各分类之间不重叠

@@ -56,7 +56,18 @@ AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 
 根据当前任务，阅读对应的参考文档：
 
-### 0. Wiki 层级结构（必读，首次创建项目前）
+### 0. MECE 框架选择指南（必读，问题分析前）
+- **框架选择原则**：见下表，根据问题类型选择合适的 MECE 框架
+- **个人健康/体能项目**：使用 **TREND 框架**（Training/Rest/Eating/Nature/Daily）
+
+| 问题类型 | 推荐框架 | 维度 |
+|---------|---------|------|
+| 制造业/生产问题 | **4M1E** | Man、Machine、Material、Method、Environment |
+| 个人健康/体能提升 | **TREND** | Training（训练）、Rest（休息）、Eating（营养）、Nature（先天）、Daily（日常） |
+| 管理/组织问题 | **5P2E** | Plan、People、Process、Performance、Power、External、Environment |
+| 流程/服务问题 | **SIPOC** | Supplier、Input、Process、Output、Customer |
+
+### 1. Wiki 层级结构（必读，首次创建项目前）
 - **Wiki 结构规范**：见 [feishu-integration.md](references/feishu-integration.md) 中的 "Wiki 层级结构规范" 章节
 - **项目索引管理**：所有项目必须在"PDCA项目管理"根节点下，并更新项目索引
 
