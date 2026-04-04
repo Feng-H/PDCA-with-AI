@@ -38,32 +38,102 @@
 
 3. **根本原因分析（MECE 框架）**
    - **MECE 框架选择**：根据问题类型选择合适的 MECE 分类
+
+     **框架速查表**：
+
+     | 问题类型 | 框架 | 维度 |
+     |---------|------|------|
+     | 制造业/生产 | 4M1E | Man/Machine/Material/Method/Environment |
+     | 个人健康/体能 | TREND | Training/Rest/Eating/Nature/Daily |
+     | 软件/技术 | PPTD | People/Process/Technology/Product/Data |
+     | 销售/营销 | 5P | Product/Price/Place/Promotion/People |
+     | 学习/教育 | COMET | Content/Method/Time/Environment/Teacher |
+     | 财务/投资 | 3RL-TD | Return/Risk/Liquidity/Time/Diversification |
+     | 团队协作 | GRCT | Goals/Roles/Communication/Trust/Tools |
+     | 客户服务 | 5S | Staff/Skill/Strategy/System/Speed |
+     | 个人效率 | TIME | Tasks/Information/Money/Energy |
+     | 流程/服务 | SIPOC | Supplier/Input/Process/Output/Customer |
+     | 管理/组织 | 5P2E | Plan/People/Process/Performance/Power/External/Environment |
+
+     **详细框架定义**：
+
      - **制造业问题**：使用 **4M1E 框架**
        - **Man（人员）**：技能、培训、意识、疲劳
        - **Machine（设备）**：故障、维护、老化、设置
        - **Material（材料）**：质量、供应、规格、存储
        - **Method（方法）**：流程、标准、工艺、操作
        - **Environment（环境）**：温度、湿度、照明、噪音
+
      - **个人健康/体能提升问题**：使用 **TREND 框架**
        - **Training（训练）**：训练强度、频率、持续时间、训练类型
        - **Rest（休息/恢复）**：睡眠质量、休息日、恢复时间、压力管理
        - **Eating（营养）**：饮食结构、热量摄入、营养素、水分、补充剂
        - **Nature（先天因素）**：年龄、性别、遗传、基础体能、健康状况
        - **Daily（日常习惯）**：日常活动量、工作性质、生活习惯、环境
-     - **管理问题**：使用 **5P2E 框架**
-       - **Plan（计划）**：目标设定、资源分配、时间规划
-       - **People（人员）**：技能、培训、激励、沟通
-       - **Process（流程）**：工作流程、决策流程、协作流程
-       - **Performance（绩效）**：KPI、评估、反馈
-       - **Power（权力）**：授权、决策权、资源控制
-       - **External（外部）**：市场、客户、竞争对手、政策
-       - **Environment（环境）**：文化、氛围、工具、设施
+
+     - **软件开发/技术问题**：使用 **PPTD 框架**
+       - **People（人员）**：开发人员、产品经理、用户
+       - **Process（流程）**：开发流程、测试流程、发布流程
+       - **Technology（技术）**：技术栈、架构、工具
+       - **Product（产品）**：功能、用户体验、需求
+       - **Data（数据）**：数据结构、数据流、数据质量
+
+     - **销售/营销问题**：使用 **5P 框架**
+       - **Product（产品）**：功能、质量、差异化
+       - **Price（价格）**：定价策略、折扣、价值
+       - **Place（渠道）**：分销渠道、覆盖范围
+       - **Promotion（推广）**：广告、公关、促销
+       - **People（人员）**：销售团队、客户服务
+
+     - **学习/教育问题**：使用 **COMET 框架**
+       - **Content（内容）**：课程内容、教材、难度
+       - **Method（方法）**：教学方法、练习方式、反馈
+       - **Time（时间）**：学习时长、频率、节奏
+       - **Environment（环境）**：学习环境、氛围、干扰
+       - **Teacher（教师/支持）**：教师质量、辅导、答疑
+
+     - **财务/投资问题**：使用 **3RL-TD 框架**
+       - **Return（回报）**：预期收益率、历史表现
+       - **Risk（风险）**：市场风险、信用风险、流动性风险
+       - **Liquidity（流动性）**：变现能力、资金周转
+       - **Time（时间）**：投资期限、时机
+       - **Diversification（多元化）**：资产配置、分散程度
+
+     - **团队协作问题**：使用 **GRCT 框架**
+       - **Goals（目标）**：共同目标、目标一致性
+       - **Roles（角色）**：角色清晰、职责分工
+       - **Communication（沟通）**：沟通频率、方式、透明度
+       - **Trust（信任）**：信任度、心理安全
+       - **Tools（工具）**：协作工具、流程工具
+
+     - **客户服务问题**：使用 **5S 框架**
+       - **Staff（员工）**：人员素质、态度、技能
+       - **Skill（技能）**：专业知识、沟通技能
+       - **Strategy（策略）**：服务策略、客户分层
+       - **System（系统）**：服务系统、流程、工具
+       - **Speed（速度）**：响应速度、解决速度
+
+     - **个人效率/时间管理问题**：使用 **TIME 框架**
+       - **Tasks（任务）**：任务优先级、任务分解
+       - **Information（信息）**：信息获取、过滤
+       - **Money（金钱）**：预算、成本控制
+       - **Energy（精力）**：精力管理、专注力
+
      - **流程问题**：使用 **SIPOC 框架**
        - **Supplier（供应商）**：供应商、输入来源
        - **Input（输入）**：资源、信息、材料
        - **Process（过程）**：活动、步骤、决策点
        - **Output（输出）**：产品、服务、信息
        - **Customer（客户）**：客户、下游接收者
+
+     - **管理问题**：使用 **5P2E 框架**
+       - **Plan（计划）**：目标、计划、资源分配
+       - **People（人员）**：技能、培训、激励
+       - **Process（流程）**：工作流程、决策流程
+       - **Performance（绩效）**：KPI、评估、反馈
+       - **Power（权力）**：授权、决策权
+       - **External（外部）**：市场、客户、政策
+       - **Environment（环境）**：文化、氛围、工具
    - **穷尽性扫描**：逐维度检查，确保不遗漏
      - 对每个维度进行系统性的问题排查
      - 使用检查清单确保覆盖完整

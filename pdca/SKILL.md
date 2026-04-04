@@ -57,15 +57,153 @@ AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 根据当前任务，阅读对应的参考文档：
 
 ### 0. MECE 框架选择指南（必读，问题分析前）
-- **框架选择原则**：见下表，根据问题类型选择合适的 MECE 框架
-- **个人健康/体能项目**：使用 **TREND 框架**（Training/Rest/Eating/Nature/Daily）
+
+**框架选择原则**：根据问题类型选择合适的 MECE 框架，确保"相互独立、完全穷尽"。
 
 | 问题类型 | 推荐框架 | 维度 |
 |---------|---------|------|
-| 制造业/生产问题 | **4M1E** | Man、Machine、Material、Method、Environment |
-| 个人健康/体能提升 | **TREND** | Training（训练）、Rest（休息）、Eating（营养）、Nature（先天）、Daily（日常） |
-| 管理/组织问题 | **5P2E** | Plan、People、Process、Performance、Power、External、Environment |
-| 流程/服务问题 | **SIPOC** | Supplier、Input、Process、Output、Customer |
+| **制造业/生产问题** | **4M1E** | Man（人员）、Machine（设备）、Material（材料）、Method（方法）、Environment（环境） |
+| **个人健康/体能提升** | **TREND** | Training（训练）、Rest（休息）、Eating（营养）、Nature（先天）、Daily（日常） |
+| **管理/组织问题** | **5P2E** | Plan（计划）、People（人员）、Process（流程）、Performance（绩效）、Power（权力）、External（外部）、Environment（环境） |
+| **流程/服务问题** | **SIPOC** | Supplier（供应商）、Input（输入）、Process（过程）、Output（输出）、Customer（客户） |
+| **软件开发/技术问题** | **PPTD** | People（人员）、Process（流程）、Technology（技术）、Product（产品）、Data（数据） |
+| **销售/营销问题** | **5P** | Product（产品）、Price（价格）、Place（渠道）、Promotion（推广）、People（人员） |
+| **学习/教育问题** | **COMET** | Content（内容）、Method（方法）、Time（时间）、Environment（环境）、Teacher（教师/支持） |
+| **财务/投资问题** | **3RL-TD** | Return（回报）、Risk（风险）、Liquidity（流动性）、Time（时间）、Diversification（多元化） |
+| **团队协作问题** | **GRCT** | Goals（目标）、Roles（角色）、Communication（沟通）、Trust（信任）、Tools（工具） |
+| **客户服务问题** | **5S** | Staff（员工）、Skill（技能）、Strategy（策略）、System（系统）、Speed（速度） |
+| **个人效率/时间管理** | **TIME** | Tasks（任务）、Information（信息）、Money（金钱）、Energy（精力） |
+
+---
+
+### 框架详细说明
+
+#### 1. 4M1E（制造业/生产）
+- **Man（人员）**：技能、培训、意识、疲劳、士气
+- **Machine（设备）**：故障、维护、老化、设置、产能
+- **Material（材料）**：质量、供应、规格、存储、成本
+- **Method（方法）**：流程、标准、工艺、操作、SOP
+- **Environment（环境）**：温度、湿度、照明、噪音、安全
+
+#### 2. TREND（个人健康/体能）
+- **Training（训练）**：强度、频率、持续时间、类型（力量/有氧/柔韧）
+- **Rest（休息）**：睡眠质量、休息日、恢复时间、压力管理
+- **Eating（营养）**：饮食结构、热量、宏量营养素、水分、补充剂
+- **Nature（先天）**：年龄、性别、遗传、基础体能、健康状况
+- **Daily（日常）**：活动量、工作性质、生活习惯、环境
+
+#### 3. 5P2E（管理/组织）
+- **Plan（计划）**：目标设定、资源分配、时间规划
+- **People（人员）**：技能、培训、激励、沟通
+- **Process（流程）**：工作流程、决策流程、协作流程
+- **Performance（绩效）**：KPI、评估、反馈
+- **Power（权力）**：授权、决策权、资源控制
+- **External（外部）**：市场、客户、竞争对手、政策
+- **Environment（环境）**：文化、氛围、工具、设施
+
+#### 4. SIPOC（流程/服务）
+- **Supplier（供应商）**：谁提供输入？
+- **Input（输入）**：需要什么资源？
+- **Process（过程）**：什么活动被执行？
+- **Output（输出）**：产生什么结果？
+- **Customer（客户）**：谁是接收者？
+
+#### 5. PPTD（软件开发/技术）
+- **People（人员）**：开发人员、产品经理、用户
+- **Process（流程）**：开发流程、测试流程、发布流程
+- **Technology（技术）**：技术栈、架构、工具
+- **Product（产品）**：功能、用户体验、需求
+- **Data（数据）**：数据结构、数据流、数据质量
+
+#### 6. 5P（销售/营销）
+- **Product（产品）**：功能、质量、差异化
+- **Price（价格）**：定价策略、折扣、价值
+- **Place（渠道）**：分销渠道、覆盖范围
+- **Promotion（推广）**：广告、公关、促销
+- **People（人员）**：销售团队、客户服务
+
+#### 7. COMET（学习/教育）
+- **Content（内容）**：课程内容、教材、难度
+- **Method（方法）**：教学方法、练习方式、反馈
+- **Time（时间）**：学习时长、频率、节奏
+- **Environment（环境）**：学习环境、氛围、干扰
+- **Teacher（教师/支持）**：教师质量、辅导、答疑
+
+#### 8. 3RL-TD（财务/投资）
+- **Return（回报）**：预期收益率、历史表现
+- **Risk（风险）**：市场风险、信用风险、流动性风险
+- **Liquidity（流动性）**：变现能力、资金周转
+- **Time（时间）**：投资期限、时机
+- **Diversification（多元化）**：资产配置、分散程度
+
+#### 9. GRCT（团队协作）
+- **Goals（目标）**：共同目标、目标一致性
+- **Roles（角色）**：角色清晰、职责分工
+- **Communication（沟通）**：沟通频率、沟通方式、信息透明
+- **Trust（信任）**：信任度、心理安全
+- **Tools（工具）**：协作工具、流程工具
+
+#### 10. 5S（客户服务）
+- **Staff（员工）**：人员素质、态度、技能
+- **Skill（技能）**：专业知识、沟通技能
+- **Strategy（策略）**：服务策略、客户分层
+- **System（系统）**：服务系统、流程、工具
+- **Speed（速度）**：响应速度、解决速度
+
+#### 11. TIME（个人效率/时间管理）
+- **Tasks（任务）**：任务优先级、任务分解
+- **Information（信息）**：信息获取、信息过滤
+- **Money（金钱）**：预算、成本控制
+- **Energy（精力）**：精力管理、专注力
+
+---
+
+### 框架选择决策树
+
+```
+问题类型判断
+    │
+    ├─ 是否生产/制造相关？
+    │   └─ YES → 4M1E
+    │
+    ├─ 是否个人健康/体能相关？
+    │   └─ YES → TREND
+    │
+    ├─ 是否软件/技术开发相关？
+    │   └─ YES → PPTD
+    │
+    ├─ 是否销售/营销相关？
+    │   └─ YES → 5P
+    │
+    ├─ 是否学习/教育相关？
+    │   └─ YES → COMET
+    │
+    ├─ 是否财务/投资相关？
+    │   └─ YES → 3RL-TD
+    │
+    ├─ 是否团队协作相关？
+    │   └─ YES → GRCT
+    │
+    ├─ 是否客户服务相关？
+    │   └─ YES → 5S
+    │
+    ├─ 是否个人效率/时间管理相关？
+    │   └─ YES → TIME
+    │
+    ├─ 是否流程/服务相关？
+    │   └─ YES → SIPOC
+    │
+    └─ 其他管理/组织问题 → 5P2E
+```
+
+---
+
+### ⚠️ 框架使用 Red Flags
+
+出现以下信号时，**立即停止**，重新选择框架：
+- 框架维度与问题类型不匹配 → 重新选择框架
+- 维度之间有明显重叠 → 检查框架定义
+- 分析过程中发现遗漏重要方面 → 补充维度或更换框架
 
 ### 1. Wiki 层级结构（必读，首次创建项目前）
 - **Wiki 结构规范**：见 [feishu-integration.md](references/feishu-integration.md) 中的 "Wiki 层级结构规范" 章节
