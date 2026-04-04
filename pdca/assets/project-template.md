@@ -6,6 +6,10 @@
 **项目负责人**：[姓名]
 **预计周期**：[例如：2周 / 1个月 / 1季度]
 
+**⚠️ 框架选择（必填）**：
+- **选择框架**：[4M1E / TREND / PPTD / 5P / COMET / 3RL-TD / GRCT / 5S / TIME / SIPOC / 5P2E]
+- **分析维度**：[列出该框架的所有维度，如 TREND: Training/Rest/Eating/Nature/Daily]
+
 ---
 
 ## 问题描述
