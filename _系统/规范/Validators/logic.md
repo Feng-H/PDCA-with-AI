@@ -1,6 +1,6 @@
 # 因果逻辑校验标准 (Causal Logic Validator)
 
-本模块用于 AI Agent 自动检查 PDCA 项目中的“原因分析”与“改善措施”之间的逻辑关联。
+本模块用于 AI Agent 自动检查 PDCA 项目中的”原因分析”与”改善措施”之间的逻辑关联，以及**框架维度在整个 PDCA 循环中的一致性**。
 
 ---
 
@@ -11,11 +11,31 @@
 **判定规则**：
 1. **FAILED (不通过)**：若存在任何一项关键根因未被有效措施覆盖，计划即为失败。
 2. **FAILED (不通过)**：若措施仅能缓解症状（治标）而不能消除根因（治本）。
-3. **PASS (通过)**：所有根因均有对应的闭环措施。
+3. **FAILED (不通过)**：**若 Plan/Do/Check/Act 各阶段使用的框架不一致**。
+4. **PASS (通过)**：所有根因均有对应的闭环措施，且框架维度在循环中保持一致。
 
 ---
 
 ## 📋 校验维度
+
+### 0. Framework Consistency (框架一致性) ⭐ 新增
+
+**定义**：Plan 阶段选择的 MECE 框架必须在 Do/Check/Act 阶段保持一致。
+
+**检查项**：
+- [ ] **Plan → Do**：Do 阶段的执行监控是否按 Plan 阶段的框架维度进行？
+- [ ] **Do → Check**：Check 阶段的评估是否按相同框架维度进行？
+- [ ] **Check → Act**：Act 阶段的行动方案是否按相同框架维度制定？
+
+**判定标准**：
+- 若 Plan 用 TREND 框架分析，但 Do 阶段只监控”训练完成率”而忽略其他维度 → **FAILED**
+- 若 Check 阶段评估只看总体目标，不按维度分解 → **FAILED**
+- 若 Act 阶段行动方案与框架维度不对应 → **FAILED**
+
+**常见错误**：
+- Plan 用 TREND（Training/Rest/Eating/Nature/Daily），但 Act 只针对 Training 制定措施
+- Plan 用 4M1E，但 Check 阶段只看”设备效率”，忽略人员、材料、方法、环境
+- Plan 用 GRCT（Goals/Roles/Communication/Trust/Tools），但 Do 只监控”目标完成率”
 
 ### 1. Root Cause Mapping (因果映射)
 - **定义**：每一条改善措施必须直接对应一个或多个经过确认的根本原因。
