@@ -103,24 +103,118 @@ AI Agent（OpenClaw）
 
 **⚠️ 强制要求**：创建新项目时，必须按照以下顺序执行：
 
-1. **确认/创建根节点**：
-   - 检查"PDCA项目管理"节点是否存在
-   - 不存在则创建（使用 `feishu_wiki_space_node.create`）
+**前置条件**：必须先获取 `space_id` 和根节点 `parent_node_token`
 
-2. **创建项目子节点**：
-   - 在根节点下创建项目文件夹
-   - 节点命名格式：`[项目名称]`
+**步骤 0：获取必要信息**
+```bash
+# 获取知识空间列表，找到 PDCA 项目管理的 space_id
+feishu_wiki_space_list
 
-3. **创建阶段子节点**：
-   - 在项目节点下创建 `Plan阶段`、`Do阶段`、`Check阶段`、`Act阶段` 文件夹
+# 获取空间下的节点列表，找到"PDCA项目管理"根节点的 node_token
+feishu_wiki_space_node.list --space_id "<space_id>"
+```
 
-4. **创建模板文档**：
-   - 在各阶段文件夹下创建对应文档
-   - 内容参考 `assets/project-template.md`
+**步骤 1：确认/创建根节点**
+- 调用 `feishu_wiki_space_node.list --space_id "<space_id>"` 检查"PDCA项目管理"节点是否存在
+- 如果存在，记录其 `node_token` 作为 `parent_node_token`
+- 如果不存在：
+  - 调用 `feishu_wiki_space_node.create` 创建根节点
+  - 参数：`space_id`, `parent_node_token`（根目录为空或 space 本身）, `title="PDCA项目管理"`
+  - **创建失败处理**：如果失败，**停止整个流程**，向用户报告错误，不要在其他地方创建文件
 
-5. **更新项目索引**：
-   - 在 `📊 项目索引.md` 中添加新项目记录
-   - 包含：项目名称、阶段、状态、负责人、日期、Wiki链接
+**步骤 2：创建项目子节点**
+- 使用 `feishu_wiki_space_node.create` 在根节点下创建项目文件夹
+- **必填参数**：
+  - `space_id`: 知识空间 ID
+  - `parent_node_token`: "PDCA项目管理"根节点的 node_token
+  - `object_type`: "wiki" 或 "folder"
+  - `title`: 项目名称
+- **创建失败处理**：如果失败，**停止整个流程**，向用户报告错误，不要在其他地方创建文件
+
+**步骤 3：创建阶段子节点**
+- 使用 `feishu_wiki_space_node.create` 在项目节点下创建阶段文件夹
+- 依次创建：`Plan阶段`、`Do阶段`、`Check阶段`、`Act阶段`
+- **创建失败处理**：任何一个失败，**停止整个流程**，向用户报告错误
+
+**步骤 4：创建模板文档**
+- 使用 `feishu_create_doc` 在各阶段文件夹下创建文档
+- **创建失败处理**：如果失败，**停止整个流程**，向用户报告错误
+
+**步骤 5：更新项目索引**
+- 使用 `feishu_update_doc` 更新 `📊 项目索引.md`
+
+---
+
+### ⚠️ Wiki 节点创建错误处理规范
+
+**绝对禁止的行为**：
+- ❌ **禁止**因为 wiki_node 创建失败就在其他地方（如根目录、桌面等）创建文件
+- ❌ **禁止**跳过 wiki_node 创建，直接创建文档
+- ❌ **禁止**使用本地文件系统作为 fallback
+
+**正确的错误处理**：
+1. **第一次失败**：检查参数是否正确（space_id、parent_node_token、title）
+2. **第二次失败**：检查权限是否足够（是否有在该空间创建节点的权限）
+3. **第三次失败**：**停止流程**，向用户报告具体错误信息
+
+**错误报告模板**：
+```
+⚠️ Wiki 节点创建失败
+
+错误信息：[具体的 API 错误信息]
+尝试的操作：创建节点 [节点名称] 在父节点 [父节点名称] 下
+
+请检查：
+1. space_id 是否正确
+2. parent_node_token 是否正确
+3. 是否有足够的权限
+
+流程已停止，没有在任何其他位置创建文件。
+```
+
+---
+
+### Wiki 节点创建详细调用示例
+
+**创建根节点**：
+```json
+{
+  "space_id": "your_space_id",
+  "parent_node_token": "",  // 空表示在空间根目录创建
+  "object_type": "folder",
+  "title": "PDCA项目管理"
+}
+```
+
+**创建项目子节点**：
+```json
+{
+  "space_id": "your_space_id",
+  "parent_node_token": "root_node_token",  // PDCA项目管理的 node_token
+  "object_type": "folder",
+  "title": "提升核心机加设备OEE"
+}
+```
+
+**创建阶段子节点**：
+```json
+{
+  "space_id": "your_space_id",
+  "parent_node_token": "project_node_token",  // 项目节点的 node_token
+  "object_type": "folder",
+  "title": "Plan阶段"
+}
+```
+
+**创建文档**：
+```json
+{
+  "space_id": "your_space_id",
+  "parent_node_token": "phase_node_token",  // 阶段节点的 node_token
+  "title": "问题分析.md",
+  "content": "# 问题分析\n..."
+}
+```
 
 ### 创建项目时
 1. 调用 `feishu_wiki_space_node.create` 在知识空间中创建项目节点
