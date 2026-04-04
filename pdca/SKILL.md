@@ -226,12 +226,20 @@ AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 ### 4. 制造场景模板
 - **OEE/质量改善模板库**：见 [manufacturing-templates.md](references/manufacturing-templates.md)
 
+### 5. 任务与日程管理（新增）
+- **Bitable 表结构**：见 [Bitable表结构定义.md](_系统/工具/Bitable表结构定义.md)
+- **任务自动生成**：见 [任务自动生成器.md](_系统/工具/任务自动生成器.md)
+- **智能巡检频率**：见 [智能巡检频率.md](_系统/工具/智能巡检频率.md)
+- **仪表板生成**：见 [仪表板生成器.md](_系统/工具/仪表板生成器.md)
+- **表单配置**：见 [表单配置生成器.md](_系统/工具/表单配置生成器.md)
+- **仪表板模板**：见 [dashboard-templates.md](references/dashboard-templates.md)
+
 ## ⚡ Quick Reference
 
 | 指令 | 触发场景 | 输出 |
 |------|---------|------|
-| `new` | 启动新项目 | 飞书 Wiki（PDCA项目管理根节点下） + Bitable + Calendar + Cron + 项目索引更新 |
-| `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 预警 |
+| `new` | 启动新项目 | 飞书 Wiki + Bitable (4张表) + Calendar + Task (自动生成) + Cron (智能频率) + 项目索引更新 |
+| `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 仪表板刷新 + 预警 |
 | `achieve` | 检索经验库 | 最佳实践推荐 + 模板匹配 |
 
 | 阶段 | 核心交付物 | 校验标准 |
