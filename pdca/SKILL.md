@@ -46,9 +46,9 @@ digraph pdca_trigger {
 
 AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 
-1. **评估与启动 (new)**：评估问题是否适合立项，自动在飞书创建资源。
+1. **评估与启动 (new)**：评估问题是否适合立项，自动创建 Wiki + Bitable 应用（含收集表/仪表盘/工作流）。
 2. **计划与校验 (Plan)**：执行 SMART 校验与因果逻辑审查。
-3. **执行与巡检 (Do)**：AI 定期巡检云文档并汇总进展。
+3. **执行与巡检 (Do)**：AI 通过 Bitable 工作流主动巡检并汇总进展。
 4. **检查与评估 (Check)**：分析数据偏差。
 5. **决策与沉淀 (Act)**：生成标准化 SOP 并归档经验。
 
@@ -211,19 +211,26 @@ AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 
 ### 1. 飞书集成与主动驱动
 - **API 调用与工具配置**：见 [feishu-integration.md](references/feishu-integration.md)
-- **自治巡检与 Cron 逻辑**：见 [cron-driving.md](references/cron-driving.md)
+- **自治巡检**：见 [cron-driving.md](references/cron-driving.md)
 
-### 2. 各阶段执行 Agent
+### 2. Bitable 原生架构（一个项目一个应用）
+- **表结构定义**：见 [_系统/工具/Bitable表结构定义.md](_系统/工具/Bitable表结构定义.md)
+- **收集表配置**：见 [_系统/工具/收集表配置指南.md](_系统/工具/收集表配置指南.md)
+- **仪表盘组件配置**：见 [_系统/工具/仪表盘组件配置.md](_系统/工具/仪表盘组件配置.md)
+- **工作流自动化配置**：见 [_系统/工具/工作流自动化配置.md](_系统/工具/工作流自动化配置.md)
+- **OpenClow API 集成**：见 [_系统/工具/OpenClow API集成.md](_系统/工具/OpenClow API集成.md)
+
+### 3. 各阶段执行 Agent
 - **Plan 阶段 (规划/校验)**：见 [plan-agent.md](references/plan-agent.md)
 - **Do 阶段 (执行/日志)**：见 [do-agent.md](references/do-agent.md)
 - **Check 阶段 (数据/评估)**：见 [check-agent.md](references/check-agent.md)
 - **Act 阶段 (决策/沉淀)**：见 [act-agent.md](references/act-agent.md)
 
-### 3. 质量与逻辑校验 (Validators)
+### 4. 质量与逻辑校验 (Validators)
 - **SMART 原则校验**：见 [transition-checklist.md](references/transition-checklist.md)
 - **因果逻辑链审查**：见 [exception-handling.md](references/exception-handling.md)
 
-### 4. 制造场景模板
+### 5. 制造场景模板
 - **OEE/质量改善模板库**：见 [manufacturing-templates.md](references/manufacturing-templates.md)
 
 ### 5. 任务与日程管理（新增）
@@ -238,7 +245,7 @@ AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 
 | 指令 | 触发场景 | 输出 |
 |------|---------|------|
-| `new` | 启动新项目 | 飞书 Wiki + Bitable (4张表) + Calendar + Task (自动生成) + Cron (智能频率) + 项目索引更新 |
+| `new` | 启动新项目 | Wiki + Bitable 应用（4张表+收集表+仪表盘+工作流）+ Calendar + Cron + 项目索引更新 |
 | `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 仪表板刷新 + 预警 |
 | `achieve` | 检索经验库 | 最佳实践推荐 + 模板匹配 |
 
