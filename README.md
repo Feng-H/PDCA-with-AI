@@ -65,13 +65,54 @@ gemini skills install https://github.com/Feng-H/PDCA-with-AI.git --path pdca
 
 ## 🛠️ 飞书集成概览
 
-| 工具 | 用途 |
-|------|------|
-| **Wiki** | 项目主存储（方案、日志、总结） |
-| **Bitable** | 项目看板（进度、状态可视化） |
-| **Card** | 交互式预警（即时上报、决策按钮） |
-| **Calendar** | 时间管理（截止日、里程碑提醒） |
-| **Sheet** | 数据分析（OEE、合格率等指标记录） |
+基于 **OpenClaw Lark 插件**（官方插件，由飞书开放平台团队开发），系统拥有以下原生能力：
+
+### Core Workflow
+
+```
+🚀 PDCA项目管理系统
+
+可用命令：
+- new     ：启动新项目
+- ongoing : 选择进行中的项目
+- achieve : 选择已完成的项目
+```
+
+### 核心原则：一个项目 = 一个文件夹 = 一个 Bitable 应用
+
+每个 PDCA 项目的所有资源归**同一个飞书文件夹**，确保结构清晰、集中管理、便于追溯。
+
+使用 `feishu-create-doc` 的 `wiki_space` 或 `folder_token` 参数创建项目根文件夹，`title` 参数中使用 `/` 自动创建子文件夹层次（如 `项目A/Plan阶段/问题分析`）。
+
+### 工具链能力矩阵
+
+| 工具 | 用途 | 核心 Skill |
+|------|------|-----------|
+| **Create Doc** | 创建云文档到指定文件夹/知识库 | `feishu-create-doc` (`wiki_space`, `folder_token`, `title` with `/`) |
+| **Update Doc** | 局部更新云文档 (append/replace_range/insert_before/after/delete_range/replace_all) | `feishu-update-doc` |
+| **Fetch Doc** | 读取云文档 Markdown 内容 | `feishu-fetch-doc` |
+| **Bitable** | 多维表格 CRUD + 批量操作 + 高级筛选 | `feishu-bitable` (27种字段类型) |
+| **Calendar** | 日程管理 + 忙闲查询 + 参会人管理 | `feishu-calendar` |
+| **Task** | 任务创建/查询/更新/完成 + 清单管理 | `feishu-task` |
+| **Sheet** | 电子表格创建/编辑 | `feishu-sheets` |
+| **IM Read** | 群聊/私聊历史读取 | `feishu-im-read` |
+| **Troubleshoot** | API 连通性/权限诊断 | `feishu-troubleshoot` |
+
+---
+
+## 📚 文档创建指南
+
+### 文档创建规则
+
+1. **项目根文件夹**：首次创建项目时，用 `create-doc` 创建"项目信息.md"，指定 `wiki_space` 或 `folder_token`，`title` 设为 `[项目名称]/项目信息`，飞书自动创建 `[项目名称]` 文件夹
+2. **阶段文档**：`title` 设为 `[项目名称]/Plan阶段/问题分析`，自动归入对应文件夹
+3. **项目索引**：在根目录创建或更新，记录所有项目的名称、阶段、状态、Bitable链接
+
+### 文档更新规则
+
+使用 `feishu-update-doc` 更新已有文档：
+- 优先使用**局部更新**（`replace_range`/`append`/`insert_before`/`insert_after`）保护图片和评论
+- 慎用 `overwrite`（会清空文档重写）
 
 ---
 
