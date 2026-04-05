@@ -22,15 +22,15 @@ PDCA with AI 是一个**时间流驱动**的项目管理系统。它将经典 PD
 
 ```
 PDCA-with-AI/
-├── pdca/               # OpenClaw Skill 包（前端接口层）
-│   ├── SKILL.md        # 符合 skill-creator 规范的主控文件
-│   ├── references/     # 详细的执行指南与 API 集成规范
-│   └── tests/          # 基线测试与质量验证
-├── _系统/              # 核心引擎层（后端规范与逻辑）
+├── SKILL.md            # 符合 skill-creator 规范的主控文件
+├── assets/             # 详细文档与测试
+│   ├── references/     # 执行指南与 API 集成规范
+│   ├── tests/          # 基线测试与质量验证
+│   └── templates/      # 项目模板
+├── system/             # 核心引擎层（后端规范与逻辑）
 │   ├── Agent/          # Plan/Do/Check/Act 专业 Agent 提示词
-│   ├── 规范/            # SMART 校验与因果逻辑模组
-│   └── 经验库.md        # 组织知识沉淀
-└── 项目/               # 项目实例数据（本地映射）
+│   └── 规范/            # SMART 校验与因果逻辑模组
+└── README.md
 ```
 
 ---
@@ -44,16 +44,28 @@ PDCA-with-AI/
 - **Red Flags 机制**：识别何时需要停止并重新评估
 - **Token 效率**：主文件保持精简，详细内容分离到 references/
 
-测试文档：[pdca/tests/](pdca/tests/)
+测试文档：[assets/tests/](assets/tests/)
 
 ---
 
 ## 🚀 快速开始
 
 ### 1. 安装 Skill
-在你的 OpenClaw / Gemini CLI 环境中运行：
+
+**方式 A：通过 npm 安装（推荐）**
 ```bash
-gemini skills install https://github.com/Feng-H/PDCA-with-AI.git --path pdca
+npm install -g @feng-h/pdca-skill
+# 或使用 npx 直接运行
+npx @feng-h/pdca-skill
+```
+
+**方式 B：通过 Git 安装**
+```bash
+# OpenClaw / Gemini CLI 环境
+gemini skills install https://github.com/Feng-H/PDCA-with-AI.git
+
+# 或使用 skills 框架
+npx skills add Feng-H/PDCA-with-AI
 ```
 
 ### 2. 常用指令

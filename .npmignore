@@ -1,0 +1,15 @@
+# npm publish ignore file
+# 只发布必要文件，保持包体积小
+
+# 开发文件
+.git/
+.gitignore
+.claude/
+
+# 文档（已在包中）
+docs/
+
+# 临时文件
+*.log
+.DS_Store
+*.tmp

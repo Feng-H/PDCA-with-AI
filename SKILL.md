@@ -255,42 +255,42 @@ AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 - 慎用 `overwrite`（会清空文档重写）
 
 ### 1. 飞书集成与主动驱动
-- **API 调用与工具配置**：见 [feishu-integration.md](references/feishu-integration.md)
-- **自治巡检**：见 [cron-driving.md](references/cron-driving.md)
+- **API 调用与工具配置**：见 [feishu-integration.md](assets/references/feishu-integration.md)
+- **自治巡检**：见 [cron-driving.md](assets/references/cron-driving.md)
 
 ### 2. Bitable 原生架构（一个项目一个应用）
-- **表结构定义**：见 [_系统/工具/Bitable表结构定义.md](_系统/工具/Bitable表结构定义.md)
-- **收集表配置**：见 [_系统/工具/收集表配置指南.md](_系统/工具/收集表配置指南.md)
-- **仪表盘组件配置**：见 [_系统/工具/仪表盘组件配置.md](_系统/工具/仪表盘组件配置.md)
-- **工作流自动化配置**：见 [_系统/工具/工作流自动化配置.md](_系统/工具/工作流自动化配置.md)
-- **Bitable 应用文档模板**：见 [_系统/工具/Bitable应用文档模板.md](_系统/工具/Bitable应用文档模板.md)
-- **OpenClow API 集成**：见 [_系统/工具/OpenClow API集成.md](_系统/工具/OpenClow API集成.md)
+- **表结构定义**：见 [system/工具/Bitable表结构定义.md](system/工具/Bitable表结构定义.md)
+- **收集表配置**：见 [system/工具/收集表配置指南.md](system/工具/收集表配置指南.md)
+- **仪表盘组件配置**：见 [system/工具/仪表盘组件配置.md](system/工具/仪表盘组件配置.md)
+- **工作流自动化配置**：见 [system/工具/工作流自动化配置.md](system/工具/工作流自动化配置.md)
+- **Bitable 应用文档模板**：见 [system/工具/Bitable应用文档模板.md](system/工具/Bitable应用文档模板.md)
+- **OpenClow API 集成**：见 [system/工具/OpenClow API集成.md](system/工具/OpenClow API集成.md)
 
 ### 3. 各阶段执行 Agent
-- **Plan 阶段 (规划/校验)**：见 [plan-agent.md](references/plan-agent.md)
-- **Do 阶段 (执行/日志)**：见 [do-agent.md](references/do-agent.md)
-- **Check 阶段 (数据/评估)**：见 [check-agent.md](references/check-agent.md)
-- **Act 阶段 (决策/沉淀)**：见 [act-agent.md](references/act-agent.md)
+- **Plan 阶段 (规划/校验)**：见 [plan-agent.md](assets/references/plan-agent.md)
+- **Do 阶段 (执行/日志)**：见 [do-agent.md](assets/references/do-agent.md)
+- **Check 阶段 (数据/评估)**：见 [check-agent.md](assets/references/check-agent.md)
+- **Act 阶段 (决策/沉淀)**：见 [act-agent.md](assets/references/act-agent.md)
 
 ### 4. 质量与逻辑校验 (Validators)
-- **SMART 原则校验**：见 [transition-checklist.md](references/transition-checklist.md)
-- **因果逻辑链审查**：见 [exception-handling.md](references/exception-handling.md)
+- **SMART 原则校验**：见 [transition-checklist.md](assets/references/transition-checklist.md)
+- **因果逻辑链审查**：见 [exception-handling.md](assets/references/exception-handling.md)
 
 ### 5. 制造场景模板
-- **OEE/质量改善模板库**：见 [manufacturing-templates.md](references/manufacturing-templates.md)
+- **OEE/质量改善模板库**：见 [manufacturing-templates.md](assets/references/manufacturing-templates.md)
 
 ### 5. 任务与日程管理（新增）
-- **Bitable 表结构**：见 [Bitable表结构定义.md](_系统/工具/Bitable表结构定义.md)
-- **任务自动生成**：见 [任务自动生成器.md](_系统/工具/任务自动生成器.md)
-- **智能巡检频率**：见 [智能巡检频率.md](_系统/工具/智能巡检频率.md)
-- **仪表板生成**：见 [仪表板生成器.md](_系统/工具/仪表板生成器.md)
-- **表单配置**：见 [表单配置生成器.md](_系统/工具/表单配置生成器.md)
-- **仪表板模板**：见 [dashboard-templates.md](references/dashboard-templates.md)
+- **Bitable 表结构**：见 [Bitable表结构定义.md](system/工具/Bitable表结构定义.md)
+- **任务自动生成**：见 [任务自动生成器.md](system/工具/任务自动生成器.md)
+- **智能巡检频率**：见 [智能巡检频率.md](system/工具/智能巡检频率.md)
+- **仪表板生成**：见 [仪表板生成器.md](system/工具/仪表板生成器.md)
+- **表单配置**：见 [表单配置生成器.md](system/工具/表单配置生成器.md)
+- **仪表板模板**：见 [dashboard-templates.md](assets/references/dashboard-templates.md)
 
 ## ⚡ Quick Reference
 
 | 指令 | 触发场景 | 输出 |
-|------|---------|------|
+|------|---------|--------|
 | `new` | 启动新项目 | Wiki 容器下创建 Bitable 应用（4张表+收集表+仪表盘+工作流+文档视图）+ Calendar + 项目索引更新 |
 | `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 仪表板刷新 + 预警 |
 | `achieve` | 检索经验库 | 最佳实践推荐 + 模板匹配 |
@@ -373,18 +373,18 @@ options:
 | 跳过 MECE 框架直接分析原因 | 遗漏关键维度，分析不全面 | 使用 4M1E/PDCA/SIPOC 框架逐维度扫描 |
 | AskUserQuestion 没有"Other"选项 | 用户被迫选择不合适的选项 | 所有单选问题必须包含"Other"选项 |
 | 创建项目后未更新项目索引 | 无法跟踪所有项目进展 | 必须在"项目索引.md"中添加记录 |
-| 跳过 SMART 校验直接进入 Do | 目标模糊导致执行偏差 | 使用 `_系统/规范/Validators/smart.md` 强制校验 |
+| 跳过 SMART 校验直接进入 Do | 目标模糊导致执行偏差 | 使用 `system/规范/Validators/smart.md` 强制校验 |
 | 数据源不一致 | 分析结论错误 | 飞书 Bitable 是唯一事实来源 |
 | 手动更新 Cron 任务 | 巡检失效或冲突 | 通过 PDCA 控制器统一管理 |
 | 阶段转换无用户确认 | 流程失控 | 转换前必须发送交互式卡片等待确认 |
-| 根因-措施不对应 | 改善无效 | 使用 `_系统/规范/Validators/logic.md` 验证逻辑链 |
+| 根因-措施不对应 | 改善无效 | 使用 `system/规范/Validators/logic.md` 验证逻辑链 |
 
 ## 🚦 Red Flags - STOP and Start Over
 
 出现以下信号时，**立即停止**，返回相应阶段：
 
 - **文档创建相关**：
-  - 文档创建失败 → **立即停止**，向用户报告错误，不要在其他地方创建文件
+  - 文档创建失败 → **立即停止**，向用户报告错误，不要在其他位置创建文件
   - 想说"在任意位置创建也可以" → 错误，必须创建在项目文件夹下
   - 想说"先创建本地文件" → 错误，不能创建本地文件作为 fallback
   - `wiki_space` 或 `folder_token` 不明确 → 先获取正确的参数
