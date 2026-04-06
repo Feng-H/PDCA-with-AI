@@ -103,9 +103,7 @@ questions:
 
 根据用户描述的问题类型，选择对应的 MECE 框架，使用 AskUserQuestion 引导用户进行问题评估和分析。
 
-### 步骤 2：创建项目主文档
-
-**⚠️ 重要**：飞书 Wiki API 不支持程序化创建文件夹结构。使用命名约定来组织项目文档。
+### 步骤 2：创建项目文件夹结构
 
 **前置检查**：先确认 PDCA 知识空间是否存在。
 
@@ -118,18 +116,35 @@ API: feishu_wiki_space.create
   - name: "PDCA"
 ```
 
-**创建项目主文档**（使用统一命名约定）：
+**⚠️ 使用 `feishu_wiki_space_node.create` 创建项目文件夹**：
+
+```
+# 步骤 2.1：获取 PDCA 知识空间的根节点 token
+API: feishu_wiki_space.info
+参数:
+  - space_id: "<PDCA 知识空间 ID>"
+返回: space_node_token（作为父节点）
+
+# 步骤 2.2：创建项目文件夹
+API: feishu_wiki_space_node.create
+参数:
+  - space_id: "<PDCA 知识空间 ID>"
+  - parent_node_token: "<space_node_token>"
+  - title: "[项目名称]"
+  - obj_type: "folder"  # 指定为文件夹类型
+返回: node_token（项目文件夹的节点 ID）
+```
+
+**步骤 2.3：创建项目说明文档**（在项目文件夹下）：
 
 ```
 API: feishu_create_doc
 参数:
-  - wiki_space: "<PDCA 知识空间 ID>"
-  - title: "[项目名称] - 项目信息"
+  - wiki_node: "<项目文件夹 node_token>"
+  - title: "项目说明"
   - content: "# 项目信息\n..."
 返回: document_id, url
 ```
-
-**命名约定**：所有项目相关文档使用 `[项目名称] - <类别> - <文档名>` 格式，确保在 Wiki 列表中按项目分组显示。
 
 ### 步骤 3：创建 Bitable 应用
 
@@ -181,45 +196,45 @@ API: feishu_bitable_app.create
 
 ### 步骤 5：创建项目文档
 
-**并发冲突处理**：文档创建如果失败（并发冲突），等待 1 秒后重试一次。
-
-使用 `feishu_create_doc` + `wiki_space` 参数，使用命名约定保持文档组织：
+**使用 `wiki_node` 参数在项目文件夹下创建文档**：
 
 ```
 API: feishu_create_doc
 参数:
-  - wiki_space: "<PDCA 知识空间 ID>"
-  - title: "[项目名称] - Plan - 问题分析"
+  - wiki_node: "<项目文件夹 node_token>"  # 步骤 2.2 获取
+  - title: "Plan"
   - content: "# 问题分析\n..."
-
-# 如果失败，等待 1 秒后重试
 ```
 
-**文档命名约定**（统一格式）：
-```
-[项目名称] - 项目信息        (步骤 2 已创建)
-[项目名称] - Plan - 问题分析
-[项目名称] - Plan - 目标设定
-[项目名称] - Plan - 解决方案
-[项目名称] - Plan - 执行计划
-[项目名称] - Do - 执行日志
-[项目名称] - Check - 数据分析
-[项目名称] - Act - 决策总结
-[项目名称] - 项目甘特图
-[项目名称] - 经验总结
-```
+**创建阶段子文件夹**（可选）：
 
-**⚠️ 飞书 Wiki 限制**：API 不支持程序化创建文件夹结构。使用命名约定确保文档在 Wiki 列表中按项目分组显示。如需文件夹视图，请在 Bitable 应用内配置文档视图。
+```
+# 如果需要在项目文件夹下创建 Plan 子文件夹
+API: feishu_wiki_space_node.create
+参数:
+  - space_id: "<PDCA 知识空间 ID>"
+  - parent_node_token: "<项目文件夹 node_token>"
+  - title: "Plan"
+  - obj_type: "folder"
+返回: plan_node_token
+
+# 然后在 Plan 文件夹下创建文档
+API: feishu_create_doc
+参数:
+  - wiki_node: "<plan_node_token>"
+  - title: "问题分析"
+  - content: "# 问题分析\n..."
+```
 
 ### 步骤 6：创建项目甘特图
 
-使用 `feishu_create_doc` + `wiki_space` 创建甘特图文档：
+使用 `feishu_create_doc` + `wiki_node` 在项目文件夹下创建甘特图：
 
 ```
 API: feishu_create_doc
 参数:
-  - wiki_space: "<PDCA 知识空间 ID>"
-  - title: "[项目名称] - 项目甘特图"
+  - wiki_node: "<项目文件夹 node_token>"
+  - title: "项目甘特图"
   - content: "<甘特图内容，包含任务、时间线、里程碑>"
 ```
 
@@ -346,18 +361,20 @@ API: CronCreate
 
 | 指令 | 触发场景 | 输出 |
 |------|---------|------|
-| `new` | 启动新项目 | Wiki 文档 + Bitable（4表）+ 甘特图 + 任务/日程 |
+| `new` | 启动新项目 | Wiki 文件夹 + 文档 + Bitable（4表）+ 甘特图 + 任务/日程 |
 | `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 预警 |
 | `achieve` | 检索经验库 | 最佳实践推荐 + 模板匹配 |
 
 | API | 用途 |
 |-----|------|
+| `feishu_wiki_space.info` | 获取知识空间根节点 token |
+| `feishu_wiki_space_node.create` | 创建文件夹节点（obj_type="folder"） |
 | `feishu_bitable_app.create` | 创建 Bitable 应用 |
 | `feishu_bitable_app_table.create` | 创建数据表并定义字段 |
 | `feishu_bitable_app_table_record.create` | 插入数据记录 |
 | `feishu_bitable_app_table_record.update` | 更新数据记录 |
 | `feishu_bitable_app_table_record.search` | 搜索数据记录 |
-| `feishu_create_doc` | 创建 Wiki 文档（使用命名约定组织文档） |
+| `feishu_create_doc` | 创建 Wiki 文档（使用 wiki_node 指定父节点） |
 | `feishu_update_doc` | 更新 Wiki 文档内容 |
 | `feishu_task_task.create` | 创建飞书任务 |
 | `feishu_calendar_event.create` | 创建日历事件 |
@@ -383,6 +400,7 @@ API: CronCreate
 出现以下信号时，**立即停止**：
 - **尝试在云空间创建项目** → 禁止！必须在 Wiki 知识空间「PDCA」下创建
 - **PDCA 知识空间不存在** → 先创建知识空间，再创建项目
+- **项目文件夹创建失败** → 检查 space_id、parent_node_token、obj_type 参数
 - **单选字段 color 用字符串** → color 必须是数字 0-54，不是字符串
 - **人员字段 API 写入失败** → 已知兼容性问题，记录下来手动设置
 - **文档创建并发冲突** → 重试一次，仍失败则报告错误
@@ -400,7 +418,7 @@ API: CronCreate
 
 | 借口 | 现实 |
 |------|------|
-| "云空间创建更方便" | 禁止！PDCA 项目必须在 Wiki 知识空间管理，使用命名约定组织文档 |
+| "云空间创建更方便" | 禁止！PDCA 项目必须在 Wiki 知识空间管理，使用 feishu_wiki_space_node.create 创建文件夹 |
 | "字段创建太复杂，跳过吧" | 字段创建失败不影响项目继续，记录下来后续手动补充 |
 | "API 写入失败，整个项目重来" | 不需要！已知兼容性问题（人员字段、单选选项），手动设置即可 |
 | "Bitable 创建太复杂，先建文档" | 文档无法做数据管理，没有 Bitable 的核心功能就失去 PDCA 系统的价值 |
