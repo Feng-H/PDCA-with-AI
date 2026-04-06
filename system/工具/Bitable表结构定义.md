@@ -45,17 +45,17 @@ PDCA Bitable 应用
     "type": 3,
     "property": {
       "options": [
-        {"name": "4M1E"},
-        {"name": "TREND"},
-        {"name": "PPTD"},
-        {"name": "5P"},
-        {"name": "COMET"},
-        {"name": "3RL-TD"},
-        {"name": "GRCT"},
-        {"name": "5S"},
-        {"name": "TIME"},
-        {"name": "SIPOC"},
-        {"name": "5P2E"}
+        {"name": "4M1E", "color": "蓝色"},
+        {"name": "TREND", "color": "蓝色"},
+        {"name": "PPTD", "color": "蓝色"},
+        {"name": "5P", "color": "蓝色"},
+        {"name": "COMET", "color": "蓝色"},
+        {"name": "3RL-TD", "color": "蓝色"},
+        {"name": "GRCT", "color": "蓝色"},
+        {"name": "5S", "color": "蓝色"},
+        {"name": "TIME", "color": "蓝色"},
+        {"name": "SIPOC", "color": "蓝色"},
+        {"name": "5P2E", "color": "蓝色"}
       ]
     }
   },
@@ -63,11 +63,11 @@ PDCA Bitable 应用
     "type": 3,
     "property": {
       "options": [
-        {"name": "Plan"},
-        {"name": "Do"},
-        {"name": "Check"},
-        {"name": "Act"},
-        {"name": "已完成"}
+        {"name": "Plan", "color": "蓝色"},
+        {"name": "Do", "color": "绿色"},
+        {"name": "Check", "color": "黄色"},
+        {"name": "Act", "color": "橙色"},
+        {"name": "已完成", "color": "灰色"}
       ]
     }
   },
@@ -75,10 +75,10 @@ PDCA Bitable 应用
     "type": 3,
     "property": {
       "options": [
-        {"name": "正常"},
-        {"name": "预警"},
-        {"name": "超时"},
-        {"name": "已完成"}
+        {"name": "正常", "color": "绿色"},
+        {"name": "预警", "color": "黄色"},
+        {"name": "超时", "color": "红色"},
+        {"name": "已完成", "color": "灰色"}
       ]
     }
   }
@@ -129,10 +129,10 @@ PDCA Bitable 应用
     "type": 3,
     "property": {
       "options": [
-        {"name": "未开始"},
-        {"name": "进行中"},
-        {"name": "已完成"},
-        {"name": "已取消"}
+        {"name": "未开始", "color": "灰色"},
+        {"name": "进行中", "color": "蓝色"},
+        {"name": "已完成", "color": "绿色"},
+        {"name": "已取消", "color": "灰色"}
       ]
     }
   },
@@ -140,9 +140,9 @@ PDCA Bitable 应用
     "type": 3,
     "property": {
       "options": [
-        {"name": "问题分析生成"},
-        {"name": "执行计划生成"},
-        {"name": "手动添加"}
+        {"name": "问题分析生成", "color": "蓝色"},
+        {"name": "执行计划生成", "color": "蓝色"},
+        {"name": "手动添加", "color": "灰色"}
       ]
     }
   },
@@ -150,9 +150,9 @@ PDCA Bitable 应用
     "type": 3,
     "property": {
       "options": [
-        {"name": "高"},
-        {"name": "中"},
-        {"name": "低"}
+        {"name": "高", "color": "红色"},
+        {"name": "中", "color": "黄色"},
+        {"name": "低", "color": "绿色"}
       ]
     }
   }
@@ -227,10 +227,10 @@ PDCA Bitable 应用
     "type": 3,
     "property": {
       "options": [
-        {"name": "进展更新"},
-        {"name": "问题记录"},
-        {"name": "决策记录"},
-        {"name": "AI洞察"}
+        {"name": "进展更新", "color": "蓝色"},
+        {"name": "问题记录", "color": "黄色"},
+        {"name": "决策记录", "color": "紫色"},
+        {"name": "AI洞察", "color": "绿色"}
       ]
     }
   }
@@ -285,7 +285,9 @@ feishu_bitable_app_table.create \
   --fields '[
     {"name": "项目ID", "type": 1, "property": {}},
     {"name": "项目名称", "type": 1, "property": {}},
-    {"name": "选择框架", "type": 3, "property": {"options": [{"name": "4M1E"}, ...]}},
+    {"name": "选择框架", "type": 3, "property": {"options": [{"name": "4M1E", "color": "蓝色"}, {"name": "5P2E", "color": "蓝色"}]}},
+    {"name": "当前阶段", "type": 3, "property": {"options": [{"name": "Plan", "color": "蓝色"}, {"name": "Do", "color": "绿色"}]}},
+    {"name": "状态", "type": 3, "property": {"options": [{"name": "正常", "color": "绿色"}, {"name": "预警", "color": "黄色"}]}},
     ...
   ]'
 ```

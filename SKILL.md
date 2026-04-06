@@ -92,7 +92,7 @@ API: feishu_bitable_app.create
 **字段类型定义**（见 `system/工具/Bitable表结构定义.md`）：
 - 文本: type=1
 - 数字: type=2
-- 单选: type=3, property.options=["选项1", "选项2"]
+- 单选: type=3, property.options=[{"name":"选项1","color":"蓝色"},{"name":"选项2","color":"红色"}]
 - 日期: type=5（毫秒时间戳）
 - 人员: type=11, 值格式: [{id: "ou_xxx"}]
 - 多行文本: type=15
