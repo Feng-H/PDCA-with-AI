@@ -101,19 +101,31 @@ questions:
 
 根据用户描述的问题类型，选择对应的 MECE 框架，使用 AskUserQuestion 引导用户进行问题评估和分析。
 
-### 步骤 2：创建 Bitable 应用
+### 步骤 2：创建项目文件夹（云空间）
+
+**⚠️ 所有项目内容统一放入此文件夹内管理。**
+
+```
+API: feishu_drive_folder_create
+参数:
+  - name: "[项目名称]"
+  - folder_token: "<父文件夹 token，可选>"
+返回: folder_token
+```
+
+### 步骤 3：创建 Bitable 应用（放入文件夹）
 
 ```
 API: feishu_bitable_app.create
 参数:
   - name: "[项目名称] PDCA"
-  - folder_token: "(可选) 放置在指定文件夹下"
+  - folder_token: "<步骤 2 获取的 folder_token>"
 返回: app_token, app_url
 ```
 
-### 步骤 3：创建 4 张核心数据表
+### 步骤 4：创建 4 张核心数据表
 
-为每个项目创建以下 4 张表，使用 `feishu_bitable_app_table.create`：
+为 Bitable 应用创建以下 4 张表，使用 `feishu_bitable_app_table.create`：
 
 | 表名 | 用途 |
 |------|------|
@@ -132,9 +144,17 @@ API: feishu_bitable_app.create
 **⚠️ 单选字段**：值是字符串，不是数组
 **⚠️ 并发限制**：Bitable 不支持并发写，串行调用并延迟 0.5-1 秒
 
-### 步骤 4：创建 Wiki 文档容器
+### 步骤 5：创建项目文档（放入文件夹）
 
-使用 `feishu_create_doc` 创建 Wiki 文档。在 `title` 参数中使用 `/`（如 `[项目名]/Plan阶段/问题分析`），飞书会自动创建文件夹结构。
+使用 `feishu_create_doc` 创建文档，传入 `folder_token`：
+
+```
+API: feishu_create_doc
+参数:
+  - title: "[文档名称]"
+  - content: "<文档内容>"
+  - folder_token: "<步骤 2 获取的 folder_token>"
+```
 
 文档结构：
 ```
@@ -150,12 +170,31 @@ API: feishu_bitable_app.create
 └── Act阶段/
 ```
 
-### 步骤 5：初始化项目主表记录
+### 步骤 6：创建项目甘特图（放入文件夹）
+
+使用 `feishu_create_doc` 创建甘特图文档，展示项目进展时间线：
+
+```
+API: feishu_create_doc
+参数:
+  - title: "项目甘特图"
+  - content: "<甘特图内容，包含任务、时间线、里程碑>"
+  - folder_token: "<步骤 2 获取的 folder_token>"
+```
+
+甘特图应包含：
+- 项目阶段时间线（Plan/Do/Check/Act）
+- 关键任务节点
+- 里程碑日期
+- 负责人分配
+- 完成进度标记
+
+### 步骤 7：初始化项目主表记录
 
 ```
 API: feishu_bitable_app_table_record.create
 参数:
-  - app_token: "<步骤 2 获取>"
+  - app_token: "<步骤 3 获取>"
   - table_id: "<项目主表ID>"
   - fields:
       项目ID: "<UUID>"
@@ -170,7 +209,7 @@ API: feishu_bitable_app_table_record.create
       Wiki链接: {link: "<Wiki URL>", text: "查看文档"}
 ```
 
-### 步骤 6：更新项目索引
+### 步骤 8：更新项目索引
 
 使用 `feishu_update_doc` 更新根目录的项目索引文档，添加新项目的状态条记录。
 
