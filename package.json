@@ -1,6 +1,6 @@
 {
   "name": "@feng-h/pdca-skill",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "PDCA project management system for Feishu/Lark integration with AI-driven workflow",
   "keywords": [
     "skills",
