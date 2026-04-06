@@ -1,5 +1,5 @@
 ---
-name: feishu-pdca
+name: pdca
 version: 1.0.0
 description: |
   Use when initiating or managing PDCA cycle projects, manufacturing quality improvement (OEE, defect rates, efficiency, cost reduction), or Feishu document inspection with SMART validation is needed. Trigger for project transitions (new/ongoing/achieve) or proactive AI alerts via Feishu cards.
