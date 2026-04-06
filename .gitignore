@@ -8,8 +8,10 @@ ehthumbs.db
 Thumbs.db
 
 # Claude 相关文件
-.claude/
+.claude/settings.local.json
 .claude-system-prompt.md
+# 但保留 skills 目录
+!.claude/skills/
 
 # 临时文件
 *.tmp

@@ -28,6 +28,7 @@
     "SKILL.md",
     "assets/",
     "system/",
+    ".claude/",
     "README.md",
     "CLAUDE.md"
   ],
