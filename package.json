@@ -22,8 +22,7 @@
   },
   "homepage": "https://github.com/Feng-H/PDCA-with-AI#readme",
   "bin": {
-    "pdca-skill": "./bin/pdca.js",
-    "pdca-install": "./install.sh"
+    "pdca-skill": "./bin/pdca.js"
   },
   "files": [
     "SKILL.md",
@@ -31,8 +30,7 @@
     "system/",
     ".claude/",
     "README.md",
-    "CLAUDE.md",
-    "install.sh"
+    "CLAUDE.md"
   ],
   "scripts": {
     "version": "git add package.json",
