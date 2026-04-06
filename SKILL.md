@@ -46,11 +46,118 @@ digraph pdca_trigger {
 
 AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 
-1. **评估与启动 (new)**：评估问题是否适合立项，在 Wiki 容器下创建 Bitable 应用（含数据表/收集表/仪表盘/工作流/文档视图）。
+1. **评估与启动 (new)**：评估问题是否适合立项，创建 Bitable 应用（含数据表）+ Wiki 文档容器。
 2. **计划与校验 (Plan)**：执行 SMART 校验与因果逻辑审查。
-3. **执行与巡检 (Do)**：AI 通过 Bitable 工作流主动巡检并汇总进展。
+3. **执行与巡检 (Do)**：AI 通过 Bitable 数据记录主动巡检并汇总进展。
 4. **检查与评估 (Check)**：分析数据偏差。
 5. **决策与沉淀 (Act)**：生成标准化 SOP 并归档经验。
+
+## 📋 项目创建详细流程 (new 命令)
+
+### 步骤 1：评估问题是否适合 PDCA
+
+使用 `AskUserQuestion` 询问：
+1. 问题描述
+2. 问题类型（设备/质量/效率/成本/流程/管理/个人健康/Other）
+3. 根据类型选择合适的 MECE 框架
+
+### 步骤 2：创建 Bitable 应用
+
+**使用 `feishu_bitable_app.create` 创建独立的多维表格应用**：
+
+```
+API: feishu_bitable_app.create
+参数:
+  - name: "[项目名称] PDCA"
+  - folder_token: "(可选) 放置在指定文件夹下"
+```
+
+### 步骤 3：创建 4 张核心数据表
+
+使用 `feishu_bitable_app_table.create` 为 Bitable 应用创建以下表：
+
+#### 表 1：项目主表 (projects)
+字段：项目ID、项目名称、选择框架、当前阶段、状态、负责人、开始日期、预计结束日期、完成度、Bitable链接、Wiki链接
+
+#### 表 2：任务数据表 (tasks)
+字段：任务ID、项目ID、任务标题、任务状态、任务描述、来源维度、来源类型、截止日期、负责人、优先级、数据记录、完成度、创建时间、完成时间
+
+#### 表 3：数据收集记录表 (data_records)
+字段：记录ID、项目ID、指标名称、维度、数值、单位、记录时间、记录人
+
+#### 表 4：执行日志表 (logs)
+字段：日志ID、项目ID、阶段、日志类型、内容、记录时间、记录人
+
+**字段类型定义**（见 `system/工具/Bitable表结构定义.md`）：
+- 文本: type=1
+- 数字: type=2
+- 单选: type=3, property.options=["选项1", "选项2"]
+- 日期: type=5（毫秒时间戳）
+- 人员: type=11, 值格式: [{id: "ou_xxx"}]
+- 多行文本: type=15
+- 超链接: type=15, 值格式: {link: "url", text: "标题"}
+
+### 步骤 4：创建项目 Wiki 文档容器
+
+使用 `feishu_create_doc` 创建 Wiki 文档，用于详细分析和协作：
+
+```
+API: feishu_create_doc
+参数:
+  - wiki_space: "<知识空间ID>"
+  - title: "[项目名称]/项目信息.md"
+  - content: "# 项目信息\n\n## Bitable 应用链接\n[链接]\n\n## 问题概述\n..."
+```
+
+在 Wiki 中创建各阶段文档：
+- `[项目名称]/Plan阶段/问题分析.md`
+- `[项目名称]/Plan阶段/目标设定.md`
+- `[项目名称]/Plan阶段/解决方案.md`
+- `[项目名称]/Plan阶段/执行计划.md`
+
+### 步骤 5：初始化项目主表记录
+
+使用 `feishu_bitable_app_table_record.create` 在项目主表中创建记录：
+
+```
+API: feishu_bitable_app_table_record.create
+参数:
+  - app_token: "<从步骤2获取>"
+  - table_id: "<项目主表ID>"
+  - fields:
+      项目ID: "<生成UUID>"
+      项目名称: "[项目名称]"
+      选择框架: "[选择的框架]"
+      当前阶段: "Plan"
+      状态: "正常"
+      负责人: [{id: "ou_<用户ID>"}]
+      开始日期: <当前时间戳>
+      预计结束日期: <根据项目设定>
+      完成度: 0
+      Wiki链接: {link: "<Wiki文档URL>", text: "查看文档"}
+```
+
+### 步骤 6：更新项目索引
+
+使用 `feishu_update_doc` 更新根目录的项目索引：
+
+```
+API: feishu_update_doc
+参数:
+  - document_id: "<项目索引文档ID>"
+  - updates:
+      - type: "append"
+      - content: "| [项目名称] | Plan | 正常 | 负责人 | 日期 | 0% | [Wiki链接] |"
+```
+
+### ⚠️ 关键注意事项
+
+1. **API 调用顺序**：必须先创建 Bitable 应用，再创建数据表，最后插入记录
+2. **人员字段格式**：必须是 `[{id: "ou_xxx"}]` 数组格式
+3. **日期时间戳**：使用毫秒时间戳，不是秒
+4. **超链接字段**：创建时不要传 property 参数
+5. **单选字段**：值是字符串，不是数组
+6. **并发限制**：同一表不支持并发写，串行调用并延迟 0.5-1 秒
 
 ## 📚 渐进式披露：详细指南
 
@@ -207,13 +314,49 @@ AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 
 ### 0. 项目文件夹规范（必读，首次创建项目前）
 
-**核心原则：一个项目 = 一个文件夹 = 一个 Bitable 应用**
+**核心原则：一个项目 = 一个 Bitable 应用 + 一个 Wiki 文档容器**
 
-每个 PDCA 项目的所有资源必须归于**同一个飞书文件夹**下，确保结构清晰、集中管理、便于追溯。
+每个 PDCA 项目由两部分组成：
+1. **Bitable 应用**：数据管理（4张表：项目主表、任务表、数据记录表、执行日志表）
+2. **Wiki 文档容器**：详细分析和协作文档（问题分析、目标设定、解决方案等）
 
-#### 文件夹创建策略
+#### 创建顺序（强制）
 
-使用 `feishu-create-doc` 的 `folder_token` 或 `wiki_space` 参数创建项目根文件夹：
+**⚠️ 必须按以下顺序创建，不能跳过或颠倒**：
+
+1. **第一步**：使用 `feishu_bitable_app.create` 创建 Bitable 应用
+2. **第二步**：使用 `feishu_bitable_app_table.create` 创建 4 张数据表
+3. **第三步**：使用 `feishu_create_doc` 创建 Wiki 文档容器
+4. **第四步**：使用 `feishu_bitable_app_table_record.create` 初始化项目主表记录
+5. **第五步**：更新项目索引
+
+#### Bitable 应用创建（第一步）
+
+```
+API: feishu_bitable_app.create
+参数:
+  - name: "[项目名称] PDCA"
+返回:
+  - app_token: 应用标识（后续创建表需要）
+  - app_url: 应用链接
+```
+
+#### 数据表创建（第二步）
+
+为每个项目创建 4 张核心表：
+
+| 表名 | 用途 | API |
+|------|------|-----|
+| 项目主表 (projects) | 项目核心信息与状态管理 | feishu_bitable_app_table.create |
+| 任务数据表 (tasks) | 任务分解与执行跟踪 | feishu_bitable_app_table.create |
+| 数据收集记录表 (data_records) | 测量数据与指标记录 | feishu_bitable_app_table.create |
+| 执行日志表 (logs) | 过程记录与决策追溯 | feishu_bitable_app_table.create |
+
+详细字段定义见：`system/工具/Bitable表结构定义.md`
+
+#### Wiki 文档容器创建（第三步）
+
+使用 `feishu-create-doc` 的 `folder_token` 或 `wiki_space` 参数创建项目文档容器：
 
 | 场景 | 方式 | 说明 |
 |------|------|------|
@@ -291,9 +434,19 @@ AI 引导项目经理从问题分析到知识沉淀的全生命周期：
 
 | 指令 | 触发场景 | 输出 |
 |------|---------|--------|
-| `new` | 启动新项目 | Wiki 容器下创建 Bitable 应用（4张表+收集表+仪表盘+工作流+文档视图）+ Calendar + 项目索引更新 |
-| `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 仪表板刷新 + 预警 |
+| `new` | 启动新项目 | 创建 Bitable 应用（4张表）+ Wiki 文档容器 + 项目索引更新 |
+| `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 预警 |
 | `achieve` | 检索经验库 | 最佳实践推荐 + 模板匹配 |
+
+| API | 用途 |
+|-----|------|
+| `feishu_bitable_app.create` | 创建 Bitable 应用 |
+| `feishu_bitable_app_table.create` | 创建数据表并定义字段 |
+| `feishu_bitable_app_table_record.create` | 插入数据记录 |
+| `feishu_bitable_app_table_record.update` | 更新数据记录 |
+| `feishu_bitable_app_table_record.search` | 搜索数据记录 |
+| `feishu_create_doc` | 创建 Wiki 文档 |
+| `feishu_update_doc` | 更新 Wiki 文档 |
 
 | 阶段 | 核心交付物 | 校验标准 |
 |------|-----------|---------|
@@ -365,6 +518,11 @@ options:
 
 | 错误 | 后果 | 修正 |
 |------|------|------|
+| **使用 `feishu_create_doc` 创建项目** | 只创建 Wiki 文档，没有 Bitable 应用，无法进行数据管理 | 必须使用 `feishu_bitable_app.create` 创建 Bitable 应用 |
+| **忘记创建数据表** | Bitable 应用是空的，无法记录数据 | 必须用 `feishu_bitable_app_table.create` 创建 4 张核心表 |
+| **人员字段格式错误** | API 报错或数据无法保存 | 人员字段必须是 `[{id: "ou_xxx"}]` 数组格式 |
+| **日期字段使用秒时间戳** | 日期显示错误 | 日期字段使用**毫秒时间戳** |
+| **跳过 Bitable 直接创建 Wiki** | 数据和文档分离，无法统一管理 | 先创建 Bitable 应用，再创建 Wiki 文档容器 |
 | 项目文档创建在错误的文件夹 | 文档分散，无法统一管理 | 必须创建在 `wiki_space` 参数指定的知识空间下 |
 | `create-doc` 前未确认 `wiki_space` | 文档被创建到个人空间根目录 | 创建前必须确认 `wiki_space` 参数正确 |
 | `title` 中未使用 `/` 分隔路径 | 扁平结构，没有文件夹层次 | `title` 使用 `[项目名]/[阶段名]/[文档名]` 格式 |
@@ -382,6 +540,11 @@ options:
 ## 🚦 Red Flags - STOP and Start Over
 
 出现以下信号时，**立即停止**，返回相应阶段：
+
+- **Bitable 创建相关**：
+  - 想用 `feishu_create_doc` 创建项目数据结构 → **停止**，必须用 `feishu_bitable_app.create`
+  - 创建 Bitable 应用后忘记创建数据表 → **停止**，必须创建 4 张核心表
+  - 想跳过 Bitable 直接用 Wiki 管理数据 → **停止**，Bitable 是数据管理的唯一事实来源
 
 - **文档创建相关**：
   - 文档创建失败 → **立即停止**，向用户报告错误，不要在其他位置创建文件
@@ -416,6 +579,9 @@ options:
 
 | 借口 | 现实 |
 |------|------|
+| "Bitable 创建太复杂，先用 Wiki 文档顶替" | Wiki 文档无法做数据管理，没有 Bitable 的核心功能就失去 PDCA 系统的价值 |
+| "用户急着要，我先创建 Wiki 文档" | Wiki 文档不等于项目管理系统，匆忙创建错误结构更难修复 |
+| "Bitable API 可能不支持，我试试用 Wiki" | 不先验证就降级方案，是技术债务的源头 |
 | "文档创建失败，我先在根目录创建" | 在错误位置创建 = 结构破坏，更难修复 |
 | "用户急着要，我先创建本地文件" | 本地文件不在知识库中，无法同步和巡检 |
 | "folder_token 可能不对，但我试试看" | 参数不对会导致创建失败或创建在错误位置 |
