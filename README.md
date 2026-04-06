@@ -27,15 +27,17 @@ This is a specialized skill package with **deep Feishu/Lark API integration**, d
 
 本技能包的核心功能依赖于以下**飞书专属 API**，这些 API 只有 OpenClaw 飞书插件提供：
 
-| API 调用 | 功能 | Claude Code | Gemini | Codex |
-|---------|------|-------------|--------|-------|
-| `feishu-create-doc` | 创建云文档到 Wiki/知识库 | ❌ | ❌ | ❌ |
-| `feishu-update-doc` | 局部更新文档内容 | ❌ | ❌ | ❌ |
-| `feishu-bitable` | 多维表格 CRUD (27种字段类型) | ❌ | ❌ | ❌ |
-| `feishu-calendar` | 日程管理和事件创建 | ❌ | ❌ | ❌ |
-| `feishu-task` | 任务创建、查询、更新 | ❌ | ❌ | ❌ |
-| `feishu-sheet` | 电子表格操作 | ❌ | ❌ | ❌ |
-| `feishu-im-read` | 群聊/私聊历史读取 | ❌ | ❌ | ❌ |
+| API 调用 | 功能 | OpenClaw | Claude Code | Gemini | Codex |
+|---------|------|----------|-------------|--------|-------|
+| `feishu-create-doc` | 创建云文档到 Wiki/知识库 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-update-doc` | 局部更新文档内容 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-bitable` | 多维表格 CRUD (27种字段类型) | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-calendar` | 日程管理和事件创建 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-task` | 任务创建、查询、更新 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-sheet` | 电子表格操作 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-im-read` | 群聊/私聊历史读取 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+
+> *⚠️ 理论上可通过 Lark-CLI 等第三方工具实现，但未经测试。本技能包仅针对 OpenClaw 飞书插件进行验证。*
 
 **关键特性**：
 - **一个项目 = 一个文件夹 = 一个 Bitable 应用** — 飞书原生架构
@@ -51,15 +53,17 @@ This is a specialized skill package with **deep Feishu/Lark API integration**, d
 
 This skill package relies on the following **Feishu-exclusive APIs**, only available via OpenClaw Feishu Plugin:
 
-| API Call | Function | Claude Code | Gemini | Codex |
-|---------|----------|-------------|--------|-------|
-| `feishu-create-doc` | Create docs in Wiki/Knowledge Base | ❌ | ❌ | ❌ |
-| `feishu-update-doc` | Partial document updates | ❌ | ❌ | ❌ |
-| `feishu-bitable` | Bitable CRUD (27 field types) | ❌ | ❌ | ❌ |
-| `feishu-calendar` | Calendar & event management | ❌ | ❌ | ❌ |
-| `feishu-task` | Task creation, query, update | ❌ | ❌ | ❌ |
-| `feishu-sheet` | Spreadsheet operations | ❌ | ❌ | ❌ |
-| `feishu-im-read` | Group/private chat history | ❌ | ❌ | ❌ |
+| API Call | Function | OpenClaw | Claude Code | Gemini | Codex |
+|---------|----------|----------|-------------|--------|-------|
+| `feishu-create-doc` | Create docs in Wiki/Knowledge Base | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-update-doc` | Partial document updates | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-bitable` | Bitable CRUD (27 field types) | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-calendar` | Calendar & event management | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-task` | Task creation, query, update | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-sheet` | Spreadsheet operations | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-im-read` | Group/private chat history | ✅ | ⚠️* | ⚠️* | ⚠️* |
+
+> *⚠️ Theoretically achievable via third-party tools like Lark-CLI, but untested. This skill package is only validated for OpenClaw Feishu Plugin.*
 
 **Key Features**:
 - **One Project = One Folder = One Bitable App** — Native Feishu architecture
@@ -75,15 +79,17 @@ These features are built on deep integration with Feishu toolchain and cannot be
 
 このスキルパッケージは、以下の **Feishu 専用 API** に依存しており、OpenClaw Feishu プラグイン経由でのみ利用可能です：
 
-| API 呼び出し | 機能 | Claude Code | Gemini | Codex |
-|-------------|------|-------------|--------|-------|
-| `feishu-create-doc` | Wiki/ナレッジベースにドキュメント作成 | ❌ | ❌ | ❌ |
-| `feishu-update-doc` | ドキュメントの部分更新 | ❌ | ❌ | ❌ |
-| `feishu-bitable` | Bitable CRUD（27種のフィールドタイプ） | ❌ | ❌ | ❌ |
-| `feishu-calendar` | カレンダーとイベント管理 | ❌ | ❌ | ❌ |
-| `feishu-task` | タスク作成、照会、更新 | ❌ | ❌ | ❌ |
-| `feishu-sheet` | スプレッドシート操作 | ❌ | ❌ | ❌ |
-| `feishu-im-read` | グループ/プライベートチャット履歴 | ❌ | ❌ | ❌ |
+| API 呼び出し | 機能 | OpenClaw | Claude Code | Gemini | Codex |
+|-------------|------|----------|-------------|--------|-------|
+| `feishu-create-doc` | Wiki/ナレッジベースにドキュメント作成 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-update-doc` | ドキュメントの部分更新 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-bitable` | Bitable CRUD（27種のフィールドタイプ） | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-calendar` | カレンダーとイベント管理 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-task` | タスク作成、照会、更新 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-sheet` | スプレッドシート操作 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| `feishu-im-read` | グループ/プライベートチャット履歴 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+
+> *⚠️ 理論的には Lark-CLI などのサードパーティツールで実現可能ですが、未テストです。このスキルパッケージは OpenClaw Feishu プラグインでのみ検証されています。*
 
 **主な機能**：
 - **1プロジェクト = 1フォルダ = 1 Bitable アプリ** — Feishu ネイティブアーキテクチャ
