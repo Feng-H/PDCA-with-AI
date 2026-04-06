@@ -2,7 +2,7 @@
 name: pdca
 version: 1.0.0
 description: |
-  AI-driven PDCA project management with Feishu/Lark integration. Use for: project setup (new), active project tracking (ongoing), experience retrieval (achieve), PDCA cycles, SMART goal validation, quality improvement (OEE, defects), manufacturing optimization, or structured problem-solving with Feishu Bitable + Wiki. Also use for project transitions, proactive AI alerts, or template-based experience reuse.
+  AI-driven PDCA project management with Feishu/Lark integration. Use for: project setup (new), active project tracking (ongoing), experience retrieval (achieve), PDCA cycles, SMART goal validation, quality improvement (OEE, defects), manufacturing optimization, or structured problem-solving with Feishu Bitable + docs. Also use for project transitions, proactive AI alerts, or template-based experience reuse.
 ---
 
 # PDCA 项目管理系统
@@ -30,9 +30,11 @@ description: |
 
 本 skill 通过这些 API 创建 Bitable 应用、Wiki 文档、任务和日程。
 
+**项目存储位置**：所有项目统一存储在 Wiki 知识空间「PDCA」下。
+
 ## 核心工作流
 
-1. **评估与启动 (new)**：评估问题是否适合立项，创建 Bitable 应用 + Wiki 文档容器
+1. **评估与启动 (new)**：评估问题是否适合立项，在 Wiki 知识空间创建项目文件夹 + Bitable 应用 + 项目文档
 2. **计划与校验 (Plan)**：执行 SMART 校验与因果逻辑审查
 3. **执行与巡检 (Do)**：AI 通过 Bitable 数据记录主动巡检并汇总进展
 4. **检查与评估 (Check)**：分析数据偏差
@@ -97,29 +99,33 @@ questions:
 
 ## 项目创建流程 (new 命令)
 
+**项目存储位置**：所有项目统一存储在 **Wiki 知识空间 - PDCA** 下。
+
 ### 步骤 1：选择 MECE 框架并评估问题
 
 根据用户描述的问题类型，选择对应的 MECE 框架，使用 AskUserQuestion 引导用户进行问题评估和分析。
 
-### 步骤 2：创建项目文件夹（云空间）
+### 步骤 2：创建项目文件夹结构
 
-**⚠️ 所有项目内容统一放入此文件夹内管理。**
+**⚠️ 使用 `wiki_space` 参数 + title 中的 `/` 自动创建文件夹结构。**
 
 ```
-API: feishu_drive_folder_create
+API: feishu_create_doc
 参数:
-  - name: "[项目名称]"
-  - folder_token: "<父文件夹 token，可选>"
-返回: folder_token
+  - wiki_space: "<PDCA 知识空间 ID>"
+  - title: "[项目名称]/项目信息"
+  - content: "# 项目信息\n..."
+返回: document_id, url
 ```
 
-### 步骤 3：创建 Bitable 应用（放入文件夹）
+创建首个文档时，飞书在 PDCA 知识空间下自动创建 `[项目名称]` 文件夹。
+
+### 步骤 3：创建 Bitable 应用
 
 ```
 API: feishu_bitable_app.create
 参数:
   - name: "[项目名称] PDCA"
-  - folder_token: "<步骤 2 获取的 folder_token>"
 返回: app_token, app_url
 ```
 
@@ -144,42 +150,45 @@ API: feishu_bitable_app.create
 **⚠️ 单选字段**：值是字符串，不是数组
 **⚠️ 并发限制**：Bitable 不支持并发写，串行调用并延迟 0.5-1 秒
 
-### 步骤 5：创建项目文档（放入文件夹）
+### 步骤 5：创建项目文档
 
-使用 `feishu_create_doc` 创建文档，传入 `folder_token`：
-
-```
-API: feishu_create_doc
-参数:
-  - title: "[文档名称]"
-  - content: "<文档内容>"
-  - folder_token: "<步骤 2 获取的 folder_token>"
-```
-
-文档结构：
-```
-[项目名称]/
-├── 项目信息.md
-├── Plan阶段/
-│   ├── 问题分析.md
-│   ├── 目标设定.md
-│   ├── 解决方案.md
-│   └── 执行计划.md
-├── Do阶段/
-├── Check阶段/
-└── Act阶段/
-```
-
-### 步骤 6：创建项目甘特图（放入文件夹）
-
-使用 `feishu_create_doc` 创建甘特图文档，展示项目进展时间线：
+使用 `feishu_create_doc` + `wiki_space` 参数，title 中用 `/` 保持文件夹结构：
 
 ```
 API: feishu_create_doc
 参数:
-  - title: "项目甘特图"
+  - wiki_space: "<PDCA 知识空间 ID>"
+  - title: "[项目名称]/Plan阶段/问题分析"
+  - content: "# 问题分析\n..."
+```
+
+文档结构（Wiki 中通过 title 中的 `/` 自动创建）：
+```
+PDCA 知识空间/
+├── [项目名称]/
+│   ├── 项目信息.md（步骤 2 已创建）
+│   ├── Plan阶段/
+│   │   ├── 问题分析.md
+│   │   ├── 目标设定.md
+│   │   ├── 解决方案.md
+│   │   └── 执行计划.md
+│   ├── Do阶段/
+│   ├── Check阶段/
+│   ├── Act阶段/
+│   └── 项目甘特图.md
+└── 项目索引.md
+```
+
+### 步骤 6：创建项目甘特图
+
+使用 `feishu_create_doc` + `wiki_space` 创建甘特图文档：
+
+```
+API: feishu_create_doc
+参数:
+  - wiki_space: "<PDCA 知识空间 ID>"
+  - title: "[项目名称]/项目甘特图"
   - content: "<甘特图内容，包含任务、时间线、里程碑>"
-  - folder_token: "<步骤 2 获取的 folder_token>"
 ```
 
 甘特图应包含：
@@ -206,12 +215,12 @@ API: feishu_bitable_app_table_record.create
       开始日期: <当前毫秒时间戳>
       预计结束日期: <根据项目设定>
       完成度: 0
-      Wiki链接: {link: "<Wiki URL>", text: "查看文档"}
+      文档链接: {link: "<项目文件夹 URL>", text: "查看文档"}
 ```
 
 ### 步骤 8：更新项目索引
 
-使用 `feishu_update_doc` 更新根目录的项目索引文档，添加新项目的状态条记录。
+使用 `feishu_update_doc` 更新 PDCA 知识空间根目录的"项目索引.md"文档，添加新项目的状态条记录。
 
 **⚠️ 文档更新优先使用局部更新**（`replace_range`/`append`/`insert_before`/`insert_after`），慎用 `overwrite` 会丢失图片和评论。
 
@@ -258,7 +267,7 @@ API: feishu_bitable_app_table_record.create
 
 | 指令 | 触发场景 | 输出 |
 |------|---------|------|
-| `new` | 启动新项目 | 创建 Bitable 应用（4张表）+ Wiki 文档容器 + 项目索引更新 |
+| `new` | 启动新项目 | 在 PDCA Wiki 空间创建项目文件夹 + Bitable 应用（4张表）+ 项目文档 + 项目索引更新 |
 | `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 预警 |
 | `achieve` | 检索经验库 | 最佳实践推荐 + 模板匹配 |
 
@@ -269,8 +278,8 @@ API: feishu_bitable_app_table_record.create
 | `feishu_bitable_app_table_record.create` | 插入数据记录 |
 | `feishu_bitable_app_table_record.update` | 更新数据记录 |
 | `feishu_bitable_app_table_record.search` | 搜索数据记录 |
-| `feishu_create_doc` | 创建 Wiki 文档 |
-| `feishu_update_doc` | 更新 Wiki 文档 |
+| `feishu_create_doc` | 创建 Wiki 文档（wiki_space + title 中 `/` 自动创建文件夹） |
+| `feishu_update_doc` | 更新 Wiki 文档内容 |
 
 | 阶段 | 核心交付物 | 校验标准 |
 |------|-----------|---------|
@@ -281,15 +290,17 @@ API: feishu_bitable_app_table_record.create
 
 ## 核心规则
 
-1. **数据事实来源**：飞书 Bitable 是项目状态的唯一事实来源
-2. **主动上报**：巡检发现逻辑偏差或进度停滞，立即发送交互式卡片
-3. **用户决策**：所有阶段转换和项目结项必须经过用户确认
-4. **SMART 校验和因果逻辑验证是强制的，不可跳过**
-5. **阶段转换严格按顺序，需要当前阶段所有必选任务完成**
+1. **Wiki 专属存储**：所有项目必须在 Wiki 知识空间「PDCA」下创建，**禁止使用云空间**
+2. **数据事实来源**：飞书 Bitable 是项目状态的唯一事实来源
+3. **主动上报**：巡检发现逻辑偏差或进度停滞，立即发送交互式卡片
+4. **用户决策**：所有阶段转换和项目结项必须经过用户确认
+5. **SMART 校验和因果逻辑验证是强制的，不可跳过**
+6. **阶段转换严格按顺序，需要当前阶段所有必选任务完成**
 
 ## 通用 Red Flags
 
-出现以下信号时，**立即停止**，返回计划阶段：
+出现以下信号时，**立即停止**：
+- **尝试在云空间创建项目** → 禁止！必须在 Wiki 知识空间「PDCA」下创建
 - 目标没有具体数字 → 回到 Plan，完成 SMART 校验
 - "执行中再调整" → 目标不够清晰
 - "快速补救一下" → 补救≠符合标准
@@ -298,14 +309,15 @@ API: feishu_bitable_app_table_record.create
 - 直接接受用户提供的原因而不验证 → 用 MECE 框架逐维度扫描
 - 跳过某个 MECE 维度 → 必须有数据支持才能判定不相关
 - Bitable 创建失败 → 向用户报告错误，不要在错误位置创建文件
-- `wiki_space` 或 `folder_token` 不明确 → 先获取正确参数
+- `wiki_space` 参数未配置 → 确认 PDCA 知识空间 ID 已配置
 
 ## Rationalization 防御
 
 | 借口 | 现实 |
 |------|------|
-| "Bitable 创建太复杂，先用 Wiki 文档" | Wiki 文档无法做数据管理，没有 Bitable 的核心功能就失去 PDCA 系统的价值 |
-| "用户急着要，我先创建 Wiki 文档" | Wiki 文档不等于项目管理系统，匆忙创建错误结构更难修复 |
+| "云空间创建更方便" | 禁止！PDCA 项目必须在 Wiki 知识空间管理，云空间无法支持 `/` 语法创建文件夹结构 |
+| "Bitable 创建太复杂，先建文档" | 文档无法做数据管理，没有 Bitable 的核心功能就失去 PDCA 系统的价值 |
+| "用户急着要，我先建文档" | 文档不等于项目管理系统，匆忙创建错误结构更难修复 |
 | "MECE 太复杂，简单问一下就行" | 简单提问 = 遗漏关键因素，后期返工更浪费时间 |
 | "选项已经覆盖所有情况了" | 你无法预知所有情况，必须有 Other 选项 |
 | "用户已经说了原因，不需要再分析" | 用户说的是症状，不是根因 |
