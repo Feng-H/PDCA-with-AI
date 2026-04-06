@@ -193,10 +193,10 @@ gemini skills install https://github.com/Feng-H/PDCA-with-AI.git
 
 ```
 PDCA-with-AI/
-├── SKILL.md            # OpenClaw/Gemini skill entry point
+├── SKILL.md            # OpenClaw/Gemini skill entry point (283 lines, skill-creator compliant)
 ├── .claude/skills/     # Reference documentation
 ├── assets/             # Documentation and tests
-│   ├── references/     # Feishu API integration guides
+│   ├── references/     # Feishu API integration guides + MECE frameworks
 │   ├── tests/          # Quality validation
 │   └── templates/      # Project templates
 ├── system/             # Core engine layer
