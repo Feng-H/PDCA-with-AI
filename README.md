@@ -52,8 +52,12 @@
 **前提条件**：已安装 OpenClaw 并配置飞书插件
 
 ```bash
-# 标准安装（会提示选择 agent，选择 OpenClaw）
+# 安装（选择 OpenClaw + Global）
 npx skills add Feng-H/PDCA-with-AI
+
+# 提示选择时：
+# - Agent: 选择 OpenClaw
+# - Scope: 选择 Global (安装到 ~/.agents/skills/pdca/)
 
 # 更新已安装的 skill
 npx skills update pdca
