@@ -1,9 +1,5 @@
 # PDCA with AI — OpenClaw + 飞书集成技能包
 
-[English](#english) | [中文](#中文) | [日本語](#日本語)
-
----
-
 <a href="https://www.npmjs.com/package/@feng-h/pdca-skill"><img src="https://img.shields.io/npm/v/@feng-h/pdca-skill" alt="npm version"></a>
 <a href="https://www.npmjs.com/package/@feng-h/pdca-skill"><img src="https://img.shields.io/npm/dm/@feng-h/pdca-skill" alt="npm downloads"></a>
 <a href="https://github.com/Feng-H/PDCA-with-AI/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@feng-h/pdca-skill" alt="License"></a>
@@ -11,19 +7,19 @@
 
 ---
 
-## ⚠️ 重要说明 / Important Notice
-
-**这是一个深度集成飞书 API 的专业技能包，必须配合 OpenClaw 飞书插件使用。**
-
-This is a specialized skill package with **deep Feishu/Lark API integration**, designed exclusively for **OpenClaw with Feishu Plugin**.
-
-**これは、Feishu/Lark API と深く統合された専門スキルパッケージであり、OpenClaw Feishu プラグインでの使用が必須です。**
+## [中文](#中文) | [English](#english) | [日本語](#日本語)
 
 ---
 
-## 为什么是 OpenClaw + 飞书？/ Why OpenClaw + Feishu?
+<a name="中文"></a>
 
-### 中文
+## 中文
+
+### ⚠️ 重要说明
+
+**这是一个深度集成飞书 API 的专业技能包，必须配合 OpenClaw 飞书插件使用。**
+
+### 为什么是 OpenClaw + 飞书？
 
 本技能包的核心功能依赖于以下**飞书专属 API**，这些 API 只有 OpenClaw 飞书插件提供：
 
@@ -39,17 +35,49 @@ This is a specialized skill package with **deep Feishu/Lark API integration**, d
 
 > *⚠️ 理论上可通过 Lark-CLI 等第三方工具实现，但未经测试。本技能包仅针对 OpenClaw 飞书插件进行验证。*
 
-**关键特性**：
-- **一个项目 = 一个文件夹 = 一个 Bitable 应用** — 飞书原生架构
-- **自治巡检 (The Loop)** — AI 定期读取飞书文档、汇总 Bitable 数据
-- **交互式卡片预警** — 飞书消息卡片推送
-- **知识沉淀** — 自动归档到 Wiki 经验库
+### 🎯 系统简介
 
-这些功能都建立在飞书工具链的深度集成之上，无法在通用 AI 工具中实现。
+基于 PDCA 循环的 AI 增强型问题解决工作流，专为 **OpenClaw + 飞书** 环境设计。
+
+### 核心亮点
+
+- **自治巡检 (The Loop)**：AI 自动读取一线人员填写的云文档，汇总进展并同步至 Bitable 看板
+- **质量校验 (Validator)**：在 Plan 阶段执行 **SMART 校验**与**因果逻辑链审查**
+- **即时预警 (Real-time Cards)**：巡检发现逻辑偏差或进度停滞，AI 立即发送飞书交互式卡片
+- **知识库 (Archiving)**：项目结项后，AI 自动提炼成功措施并归档
+- **制造场景优化**：内置设备 OEE 提升、不良率降低等专业模板
+
+### 🚀 快速开始
+
+**前提条件**：已安装 OpenClaw 并配置飞书插件
+
+```bash
+# 通过 skills.sh 安装
+npx skills add Feng-H/PDCA-with-AI --agent skills
+
+# 或使用 Gemini CLI
+gemini skills install https://github.com/Feng-H/PDCA-with-AI.git
+```
+
+### 常用指令
+
+| 指令 | 说明 |
+|------|------|
+| `new` | 启动新项目 |
+| `ongoing` | 查看活跃项目看板 |
+| `achieve` | 检索历史成功案例 |
 
 ---
 
-### English
+<a name="english"></a>
+
+## English
+
+### ⚠️ Important Notice
+
+**This is a specialized skill package with deep Feishu/Lark API integration, designed exclusively for OpenClaw with Feishu Plugin.**
+
+### Why OpenClaw + Feishu?
 
 This skill package relies on the following **Feishu-exclusive APIs**, only available via OpenClaw Feishu Plugin:
 
@@ -65,17 +93,49 @@ This skill package relies on the following **Feishu-exclusive APIs**, only avail
 
 > *⚠️ Theoretically achievable via third-party tools like Lark-CLI, but untested. This skill package is only validated for OpenClaw Feishu Plugin.*
 
-**Key Features**:
-- **One Project = One Folder = One Bitable App** — Native Feishu architecture
-- **Autonomous Inspection (The Loop)** — AI periodically reads Feishu docs, aggregates Bitable data
-- **Interactive Card Alerts** — Feishu message card push notifications
-- **Knowledge Archiving** — Auto-archive to Wiki experience library
+### 🎯 Overview
 
-These features are built on deep integration with Feishu toolchain and cannot be achieved in generic AI tools.
+AI-enhanced problem-solving workflow based on the PDCA cycle, designed specifically for **OpenClaw + Feishu/Lark** environments.
+
+### Key Features
+
+- **Autonomous Inspection (The Loop)**: AI automatically reads cloud documents, summarizes progress, and syncs to Bitable dashboards
+- **Quality Validation**: SMART verification and causal logic chain review in Plan phase
+- **Real-time Alerts**: AI sends Feishu interactive cards immediately when logic deviations or progress stagnation are detected
+- **Knowledge Archiving**: AI extracts successful measures for future reuse
+- **Manufacturing Optimization**: Built-in templates for OEE improvement, defect rate reduction, etc.
+
+### 🚀 Quick Start
+
+**Prerequisite**: OpenClaw installed with Feishu plugin configured
+
+```bash
+# Install via skills.sh
+npx skills add Feng-H/PDCA-with-AI --agent skills
+
+# Or using Gemini CLI
+gemini skills install https://github.com/Feng-H/PDCA-with-AI.git
+```
+
+### Common Commands
+
+| Command | Description |
+|---------|-------------|
+| `new` | Start a new project |
+| `ongoing` | View active project dashboard |
+| `achieve` | Search historical success cases |
 
 ---
 
-### 日本語
+<a name="日本語"></a>
+
+## 日本語
+
+### ⚠️ 重要なお知らせ
+
+**これは、Feishu/Lark API と深く統合された専門スキルパッケージであり、OpenClaw Feishu プラグインでの使用が必須です。**
+
+### なぜ OpenClaw + Feishu なのか？
 
 このスキルパッケージは、以下の **Feishu 専用 API** に依存しており、OpenClaw Feishu プラグイン経由でのみ利用可能です：
 
@@ -91,59 +151,21 @@ These features are built on deep integration with Feishu toolchain and cannot be
 
 > *⚠️ 理論的には Lark-CLI などのサードパーティツールで実現可能ですが、未テストです。このスキルパッケージは OpenClaw Feishu プラグインでのみ検証されています。*
 
-**主な機能**：
-- **1プロジェクト = 1フォルダ = 1 Bitable アプリ** — Feishu ネイティブアーキテクチャ
-- **自律検査（The Loop）** — AI が定期的に Feishu ドキュメントを読み取り、Bitable データを集約
-- **インタラクティブカードアラート** — Feishu メッセージカードプッシュ通知
-- **知識アーカイブ** — Wiki 経験ライブラリへ自動アーカイブ
+### 🎯 概要
 
-これらの機能は Feishu ツールチェーンとの深い統合に基づいており、汎用 AI ツールでは実現できません。
+PDCAサイクルに基づく AI 強化型問題解決ワークフロー、**OpenClaw + Feishu/Lark** 環境のために特別に設計されました。
 
----
+### 主な機能
 
-## 🚀 快速开始 / Quick Start
+- **自律検査（The Loop）**：AI が自動的にクラウドドキュメントを読み取り、進捗を要約して Bitable ダッシュボードに同期
+- **品質検証**：Plan フェーズでの SMART 検証と因果ロジックチェーンレビュー
+- **リアルタイムアラート**：論理の偏差や進捗の停滞を検出すると、AI が即座に Feishu インタラクティブカードを送信
+- **知識アーカイブ**：AI が成功した施策を抽出して将来のために保存
+- **製造業向け最適化**：OEE 向上、不良率低減などの専門テンプレートを内蔵
 
-### 中文
+### 🚀 クイックスタート
 
-**前提条件**：已安装 OpenClaw 并配置飞书插件
-
-```bash
-# 通过 skills.sh 安装
-npx skills add Feng-H/PDCA-with-AI --agent skills
-
-# 或使用 Gemini CLI
-gemini skills install https://github.com/Feng-H/PDCA-with-AI.git
-```
-
-**核心命令**：
-- `new` — 启动新 PDCA 项目（自动创建 Wiki + Bitable + Calendar）
-- `ongoing` — 查看活跃项目看板
-- `achieve` — 检索历史成功案例
-
----
-
-### English
-
-**Prerequisite**: OpenClaw installed with Feishu plugin configured
-
-```bash
-# Install via skills.sh
-npx skills add Feng-H/PDCA-with-AI --agent skills
-
-# Or using Gemini CLI
-gemini skills install https://github.com/Feng-H/PDCA-with-AI.git
-```
-
-**Core Commands**:
-- `new` — Start a new PDCA project (auto-creates Wiki + Bitable + Calendar)
-- `ongoing` — View active project dashboard
-- `achieve` — Search historical success cases
-
----
-
-### 日本語
-
-**前提条件**: OpenClaw がインストールされ、Feishu プラグインが設定されていること
+**前提条件**：OpenClaw がインストールされ、Feishu プラグインが設定されていること
 
 ```bash
 # skills.sh 経由でインストール
@@ -153,32 +175,38 @@ npx skills add Feng-H/PDCA-with-AI --agent skills
 gemini skills install https://github.com/Feng-H/PDCA-with-AI.git
 ```
 
-**主要コマンド**:
-- `new` — 新規 PDCA プロジェクトを開始（Wiki + Bitable + Calendar を自動作成）
-- `ongoing` — アクティブなプロジェクトダッシュボードを表示
-- `achieve` — 過去の成功事例を検索
+### 一般コマンド
+
+| コマンド | 説明 |
+|---------|------|
+| `new` | 新規プロジェクトを開始 |
+| `ongoing` | アクティブなプロジェクトダッシュボードを表示 |
+| `achieve` | 過去の成功事例を検索 |
 
 ---
 
-## 📁 项目结构 / Project Structure
+## 📁 Project Structure
 
 ```
 PDCA-with-AI/
 ├── SKILL.md            # OpenClaw/Gemini skill entry point
-├── .claude/skills/     # Reference documentation (not for execution)
+├── .claude/skills/     # Reference documentation
 ├── assets/             # Documentation and tests
 │   ├── references/     # Feishu API integration guides
 │   ├── tests/          # Quality validation
 │   └── templates/      # Project templates
 ├── system/             # Core engine layer
 │   ├── Agent/          # Plan/Do/Check/Act Agent prompts
-│   └── 规范/            # SMART validation modules
+│   ├── 规范/            # SMART validation modules
+│   ├── 工具/            # Bitable config, workflows
+│   └── 模板/            # System templates
+├── bin/                # npx executable
 └── README.md
 ```
 
-## 📚 文档 / Documentation
+## 📚 Documentation
 
-- [飞书 API 集成指南](assets/references/feishu-integration.md) - Complete Feishu API Integration Guide
+- [飞书 API 集成指南](assets/references/feishu-integration.md) - Complete Feishu/Lark API Integration Guide
 - [OpenClaw 项目](https://github.com/open-claw/open-claw) - OpenClaw Plugin
 - [质量标准](assets/tests/) - Quality Standards & Testing
 
