@@ -51,12 +51,37 @@
 
 **前提条件**：已安装 OpenClaw 并配置飞书插件
 
-```bash
-# 通过 skills.sh 安装
-npx skills add Feng-H/PDCA-with-AI --agent skills
+#### 方式 1：自动安装脚本（推荐）
 
-# 或使用 Gemini CLI
-gemini skills install https://github.com/Feng-H/PDCA-with-AI.git
+```bash
+# 自动检测 OpenClaw 目录并安装
+npx @feng-h/pdca-skill install
+
+# 或下载后直接运行
+curl -fsSL https://raw.githubusercontent.com/Feng-H/PDCA-with-AI/main/install.sh | bash
+```
+
+#### 方式 2：通过 skills.sh
+
+```bash
+npx skills add Feng-H/PDCA-with-AI --agent skills
+```
+
+#### 方式 3：手动安装
+
+```bash
+# 克隆到 OpenClaw skills 目录
+git clone https://github.com/Feng-H/PDCA-with-AI.git ~/.openclaw/skills/pdca
+```
+
+### 更新技能
+
+```bash
+# 使用安装脚本自动更新
+npx @feng-h/pdca-skill install
+
+# 或进入目录手动拉取
+cd ~/.openclaw/skills/pdca && git pull
 ```
 
 ### 常用指令
