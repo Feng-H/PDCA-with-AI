@@ -99,8 +99,6 @@ questions:
 
 ## 项目创建流程 (new 命令)
 
-**项目存储位置**：所有项目统一存储在 **Wiki 知识空间 - PDCA** 下。
-
 ### 步骤 1：选择 MECE 框架并评估问题
 
 根据用户描述的问题类型，选择对应的 MECE 框架，使用 AskUserQuestion 引导用户进行问题评估和分析。
@@ -224,6 +222,47 @@ API: feishu_bitable_app_table_record.create
 
 **⚠️ 文档更新优先使用局部更新**（`replace_range`/`append`/`insert_before`/`insert_after`），慎用 `overwrite` 会丢失图片和评论。
 
+### 步骤 9：创建阶段任务和日程提醒
+
+**执行前先阅读**：[任务自动生成器.md](system/工具/任务自动生成器.md)、[feishu-integration.md](assets/references/feishu-integration.md)
+
+根据 Plan 阶段的执行计划，创建飞书任务和日历事件：
+
+**创建飞书任务**：
+```
+API: feishu_task_task.create
+参数:
+  - task_list_id: "<任务列表 ID>"
+  - title: "<任务名称>"
+  - description: "<任务描述>"
+  - due: <截止时间戳>
+  - assignee: [{id: "ou_<用户ID>"}]
+```
+
+为每个关键任务创建飞书任务，确保负责人收到提醒。
+
+**创建日历事件**（里程碑）：
+```
+API: feishu_calendar_event.create
+参数:
+  - calendar_id: "<日历 ID>"
+  - title: "<里程碑名称>"
+  - description: "<描述>"
+  - start_time: <开始时间戳>
+  - end_time: <结束时间戳>
+  - attendee_capabilities: [{user_id: "ou_<用户ID>"}]
+```
+
+为关键里程碑（如阶段转换日期、评审会议）创建日历事件。
+
+**创建巡检 Cron 任务**：
+```
+API: CronCreate
+参数:
+  - cron: "0 9 * * 1-5"  # 工作日每天 9:00
+  - prompt: "检查 [项目名称] 进度，更新 Bitable 状态"
+```
+
 ## 渐进式披露：详细指南
 
 根据当前任务，阅读对应的参考文档：
@@ -267,7 +306,7 @@ API: feishu_bitable_app_table_record.create
 
 | 指令 | 触发场景 | 输出 |
 |------|---------|------|
-| `new` | 启动新项目 | 在 PDCA Wiki 空间创建项目文件夹 + Bitable 应用（4张表）+ 项目文档 + 项目索引更新 |
+| `new` | 启动新项目 | Wiki 文件夹 + Bitable（4表）+ 文档 + 甘特图 + 任务/日程 |
 | `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 预警 |
 | `achieve` | 检索经验库 | 最佳实践推荐 + 模板匹配 |
 
@@ -280,6 +319,8 @@ API: feishu_bitable_app_table_record.create
 | `feishu_bitable_app_table_record.search` | 搜索数据记录 |
 | `feishu_create_doc` | 创建 Wiki 文档（wiki_space + title 中 `/` 自动创建文件夹） |
 | `feishu_update_doc` | 更新 Wiki 文档内容 |
+| `feishu_task_task.create` | 创建飞书任务 |
+| `feishu_calendar_event.create` | 创建日历事件 |
 
 | 阶段 | 核心交付物 | 校验标准 |
 |------|-----------|---------|
