@@ -7,11 +7,28 @@
 ehthumbs.db
 Thumbs.db
 
-# Claude 相关文件
-.claude/settings.local.json
-.claude-system-prompt.md
-# 但保留 skills 目录
-!.claude/skills/
+# 编辑器/IDE 文件
+.vscode/
+.idea/
+*.sublime-*
+
+# 本地保留，不推送的文档
+docs/
+.claude/
+bin/
+GEMINI.md
+
+# 测试文件（本地保留）
+assets/tests/
+
+# system/ 中本地保留的文件
+system/Agent/
+system/模板/
+system/经验库.md
+system/项目索引.md
+system/项目管理系统.md
+system/项目状态跟踪.md
+system/制造质量项目模板.md
 
 # 临时文件
 *.tmp
@@ -20,33 +37,3 @@ Thumbs.db
 *.bak
 *.swp
 *~
-
-# 编辑器/IDE 文件
-.vscode/
-.idea/
-*.sublime-*
-.atom/
-
-# macOS
-.AppleDouble
-.LSOverride
-
-# Windows
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-*.lnk
-
-# 项目特定文件（如果需要）
-# 项目/临时数据/
-# 项目/工作副本/
-# 项目/草稿/
-
-# 可选：排除敏感信息
-# 包含密码、密钥的文件
-# *.key
-# *.pem
-# *.p12
-# config/secrets/
