@@ -1,4 +1,4 @@
-# PDCA with AI — OpenClaw + 飞书集成技能包
+# PDCA with AI — AI 驱动的 PDCA 工作流技能包
 
 <a href="https://www.npmjs.com/package/@feng-h/pdca-skill"><img src="https://img.shields.io/npm/v/@feng-h/pdca-skill" alt="npm version"></a>
 <a href="https://www.npmjs.com/package/@feng-h/pdca-skill"><img src="https://img.shields.io/npm/dm/@feng-h/pdca-skill" alt="npm downloads"></a>
@@ -15,29 +15,29 @@
 
 ## 中文
 
-### ⚠️ 重要说明
+### ℹ️ 平台说明
 
-**这是一个深度集成飞书 API 的专业技能包，必须配合 OpenClaw 飞书插件使用。**
+**本技能包的平台无关（Platform-Agnostic）设计：** AI Agent 层不绑定任何特定平台。飞书（Feishu/Lark）作为**推荐深度集成后端**，提供 Bitable、Wiki、Calendar 等完整工具链，但非必需。
 
-### 为什么是 OpenClaw + 飞书？
+### 为什么推荐飞书？
 
-本技能包的核心功能依赖于以下**飞书专属 API**，这些 API 只有 OpenClaw 飞书插件提供：
+飞书后端提供以下能力，可充分发挥 PDCA 工作流潜力：
 
-| API 调用 | 功能 | OpenClaw | Claude Code | Gemini | Codex |
-|---------|------|----------|-------------|--------|-------|
-| `feishu-create-doc` | 创建云文档到 Wiki/知识库 | ✅ | ⚠️* | ⚠️* | ⚠️* |
-| `feishu-update-doc` | 局部更新文档内容 | ✅ | ⚠️* | ⚠️* | ⚠️* |
-| `feishu-bitable` | 多维表格 CRUD (27种字段类型) | ✅ | ⚠️* | ⚠️* | ⚠️* |
-| `feishu-calendar` | 日程管理和事件创建 | ✅ | ⚠️* | ⚠️* | ⚠️* |
-| `feishu-task` | 任务创建、查询、更新 | ✅ | ⚠️* | ⚠️* | ⚠️* |
-| `feishu-sheet` | 电子表格操作 | ✅ | ⚠️* | ⚠️* | ⚠️* |
-| `feishu-im-read` | 群聊/私聊历史读取 | ✅ | ⚠️* | ⚠️* | ⚠️* |
+| API 调用 | 功能 | 飞书插件 | 通用方式 |
+|---------|------|---------|---------|
+| `feishu-create-doc` | 创建云文档到 Wiki/知识库 | ✅ | ⚠️ |
+| `feishu-update-doc` | 局部更新文档内容 | ✅ | ⚠️ |
+| `feishu-bitable` | 多维表格 CRUD (27种字段类型) | ✅ | ⚠️ |
+| `feishu-calendar` | 日程管理和事件创建 | ✅ | ⚠️ |
+| `feishu-task` | 任务创建、查询、更新 | ✅ | ⚠️ |
+| `feishu-sheet` | 电子表格操作 | ✅ | ⚠️ |
+| `feishu-im-read` | 群聊/私聊历史读取 | ✅ | ⚠️ |
 
-> *⚠️ 理论上可通过 Lark-CLI 等第三方工具实现，但未经测试。本技能包仅针对 OpenClaw 飞书插件进行验证。*
+> ⚠️ 通用方式指通过 MCP、REST API 或其他工具调用实现，功能可能因平台而异。
 
 ### 🎯 系统简介
 
-基于 PDCA 循环的 AI 增强型问题解决工作流，专为 **OpenClaw + 飞书** 环境设计。
+基于 PDCA 循环的 AI 增强型问题解决工作流，**平台无关设计**，推荐配合飞书使用。
 
 ### 核心亮点
 
@@ -49,7 +49,7 @@
 
 ### 🚀 快速开始
 
-**前提条件**：已安装 OpenClaw 并配置飞书插件
+**前提条件**：已安装支持的 AI Agent 平台（如 OpenClaw、Hermes Agent 等）
 
 ```bash
 # 安装（选择 OpenClaw + Global）
@@ -77,13 +77,13 @@ npx skills update pdca
 
 ## English
 
-### ⚠️ Important Notice
+### ℹ️ Platform Notice
 
-**This is a specialized skill package with deep Feishu/Lark API integration, designed exclusively for OpenClaw with Feishu Plugin.**
+**This skill package uses a platform-agnostic design.** The AI Agent layer is not tied to any specific platform. Feishu/Lark is the **recommended backend** for deep integration (Bitable, Wiki, Calendar, etc.), but is not required.
 
-### Why OpenClaw + Feishu?
+### Why Feishu?
 
-This skill package relies on the following **Feishu-exclusive APIs**, only available via OpenClaw Feishu Plugin:
+The Feishu backend provides the following capabilities for full PDCA workflow support:
 
 | API Call | Function | OpenClaw | Claude Code | Gemini | Codex |
 |---------|----------|----------|-------------|--------|-------|
@@ -99,7 +99,7 @@ This skill package relies on the following **Feishu-exclusive APIs**, only avail
 
 ### 🎯 Overview
 
-AI-enhanced problem-solving workflow based on the PDCA cycle, designed specifically for **OpenClaw + Feishu/Lark** environments.
+AI-enhanced problem-solving workflow based on the PDCA cycle, with **platform-agnostic design**. Feishu/Lark recommended as the integration backend.
 
 ### Key Features
 
@@ -111,7 +111,7 @@ AI-enhanced problem-solving workflow based on the PDCA cycle, designed specifica
 
 ### 🚀 Quick Start
 
-**Prerequisite**: OpenClaw installed with Feishu plugin configured
+**Prerequisite**: A supported AI Agent platform installed (e.g., OpenClaw, Hermes Agent)
 
 ```bash
 # Install via skills.sh

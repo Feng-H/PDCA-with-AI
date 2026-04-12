@@ -1,13 +1,13 @@
 ---
 name: pdca
-version: 1.0.0
+version: 2.0.0
 description: |
-  AI-driven PDCA project management with Feishu/Lark integration. Use for: project setup (new), active project tracking (ongoing), experience retrieval (achieve), PDCA cycles, SMART goal validation, quality improvement (OEE, defects), manufacturing optimization, or structured problem-solving with Feishu Bitable + docs. Also use for project transitions, proactive AI alerts, or template-based experience reuse.
+  AI-driven PDCA project management with proactive inspection. Use for: project setup (new), active project tracking (ongoing), experience retrieval (achieve), PDCA cycles, SMART goal validation, quality improvement (OEE, defects), manufacturing optimization, or structured problem-solving. Supports Feishu/Lark as integrated backend for Bitable + Wiki + Calendar + Task. Works on any AI Agent platform (OpenClaw, Hermes Agent, Claude Code, etc.).
 ---
 
 # PDCA 项目管理系统
 
-基于 PDCA 循环的结构化问题解决系统，由 AI 驱动实现主动巡检、SMART 目标校验和飞书工具链集成。
+基于 PDCA 循环的结构化问题解决系统。AI Agent 驱动主动巡检、SMART 目标校验和 MECE 框架分析，支持飞书工具链作为深度集成后端。
 
 ## 何时使用
 
@@ -21,34 +21,28 @@ description: |
 - "启动一个 PDCA 项目来降低产品缺陷率"
 - "用飞书 Bitable 管理我们的质量改善项目"
 - "我需要 SMART 目标校验，目标是将 OEE 提升到 85%"
+- "检查一下我的 PDCA 项目进度"
 
-## 系统依赖
+## 平台与后端
 
-**必需平台**：
-- **OpenClaw**：AI CLI 框架（https://github.com/open-claw/open-claw）
-- **飞书插件**：提供 `feishu-bitable`、`feishu-create-doc` 等 API
+**Agent 平台**：本技能不绑定任何特定 AI Agent 平台，可用于：
+- OpenClaw（https://github.com/open-claw/open-claw）
+- Hermes Agent
+- Claude Code
+- 任何能加载 Markdown 技能并执行工具调用的 Agent
 
-本 skill 通过这些 API 创建 Bitable 应用、Wiki 文档、任务和日程。
+**工具后端（推荐：飞书）**：
+- 飞书提供项目管理的全套工具链（Wiki 文档、Bitable 多维表格、Calendar 日历、Task 任务）
+- 飞书集成实现详见 [feishu-integration.md](assets/references/feishu-integration.md)
+- Bitable 表结构定义详见 [Bitable表结构定义.md](system/工具/Bitable表结构定义.md)
 
-**项目存储位置**：所有项目统一存储在 Wiki 知识空间「PDCA」下。
+**最小可用模式**：即使没有飞书，Agent 也可以用本地文件系统管理项目（文档 + JSON 状态文件），核心的 PDCA 方法论、MECE 分析、SMART 校验仍然完整可用。
 
-## 核心工作流
+## 核心特性
 
-1. **评估与启动 (new)**：评估问题是否适合立项，在 Wiki 知识空间创建项目文档 + Bitable 应用 + 项目甘特图
-2. **计划与校验 (Plan)**：执行 SMART 校验与因果逻辑审查
-3. **执行与巡检 (Do)**：AI 通过 Bitable 数据记录主动巡检并汇总进展
-4. **检查与评估 (Check)**：分析数据偏差
-5. **决策与沉淀 (Act)**：生成标准化 SOP 并归档经验
+### 1. MECE 框架分析
 
-## 全局交互规范：AskUserQuestion 选项设计
-
-**适用范围**：PDCA **每个阶段** 中 AI 主动发起的 AskUserQuestion 对话，不限于项目启动阶段。
-
-设计选项时遵循三大原则：
-
-### 1. MECE 原则 — 基于框架设计选项
-
-选项必须"相互独立、完全穷尽"。根据当前对话的问题类型，选择对应的 MECE 框架，用其维度作为选项基础：
+根据问题类型选择对应的分析框架，确保维度覆盖完整、无遗漏无重叠：
 
 | 问题类型 → 框架 |
 |------|
@@ -66,318 +60,133 @@ description: |
 
 每个框架的逐维度详细说明见 [mece-frameworks.md](assets/references/mece-frameworks.md)。
 
+### 2. 质量门（不可跳过）
+
+- **SMART 校验**：目标必须是具体的、可衡量的、可达成的、相关的、有时限的
+- **因果逻辑审查**：问题原因与对策之间必须有因果链，一票否决
+- 详细规范见 [核心规范.md](system/规范/核心规范.md)、[smart.md](system/规范/Validators/smart.md)、[logic.md](system/规范/Validators/logic.md)
+
+### 3. 主动巡检（Agent 核心价值）
+
+**项目创建后无人跟进是 PDCA 失败的首要原因。** Agent 必须像项目经理一样定期主动检查进度。
+
+- 每日进度检查（建议 09:00）
+- 阶段到期前 2 天预警
+- 里程碑到期提醒
+- 进度偏差分析（时间进度 vs 完成度）
+- 超时警告
+
+完整行为规范见 [proactive-reminder.md](assets/references/proactive-reminder.md)。
+
+---
+
+## 全局交互规范：选项设计
+
+**适用范围**：PDCA **每个阶段**中 AI 主动发起的选项对话。
+
+设计选项时遵循三大原则：
+
+### 1. MECE 原则 — 基于框架设计选项
+
+选项必须"相互独立、完全穷尽"。根据当前对话的问题类型，选择对应的 MECE 框架维度作为选项基础（见上表）。
+
 ### 2. 多选优先 — 原因/因素往往不止一个
 
-问题涉及"哪些方面"、"什么原因"、"什么因素"时，使用 `multiSelect: true`。
+问题涉及"哪些方面"、"什么原因"、"什么因素"时，使用多选。
 
 ### 3. 允许自定义 — 必须有 Other 选项
 
-你无法预先覆盖所有情况，所有问题必须包含 "Other" 选项。
-
-### AskUserQuestion 模板
-
-```yaml
-questions:
-  - question: "问题陈述（可多选）"
-    header: "标签"
-    multiSelect: true
-    options:
-      - label: "MECE 维度 A"  description: "说明"
-      - label: "MECE 维度 B"  description: "说明"
-      - label: "Other"  description: "其他（请自定义输入）"
-```
+所有问题必须包含自定义选项，因为无法预先覆盖所有情况。
 
 ### 选项设计 Red Flags
 
-出现以下信号时，**立即停止**，重新设计选项：
 - 选项之间有明显重叠 → 基于 MECE 框架重新设计
-- 用户说"原因是多个"但只能单选 → 改为 `multiSelect: true`
-- 用户说"我的情况不在选项里" → 缺少 Other 选项，重新设计
+- 用户说"原因是多个"但只能单选 → 改为多选
+- 用户说"我的情况不在选项里" → 缺少自定义选项
 - 没有基于任何框架直接编选项 → 先选择合适的框架
 
 ---
 
-## 项目创建流程 (new 命令)
+## 三大指令
 
-### 步骤 1：选择 MECE 框架并评估问题
+### `new` — 启动新项目
 
-根据用户描述的问题类型，选择对应的 MECE 框架，使用 AskUserQuestion 引导用户进行问题评估和分析。
+**流程**：
+1. **评估问题**：根据问题类型选择 MECE 框架，引导用户进行结构化分析
+2. **SMART 校验**：量化目标，通过 SMART + 因果逻辑双重校验
+3. **创建项目结构**：
+   - 项目文档（问题分析、目标、解决方案）
+   - 数据表（项目主表、任务表、数据记录表、执行日志表）
+   - 项目甘特图（阶段时间线、关键节点、里程碑）
+4. **生成执行计划**：按 MECE 维度分解任务，设定时间节点
+5. **注册巡检**：创建每日巡检 + 阶段到期预警 + 里程碑提醒
 
-### 步骤 2：创建项目文件夹结构
+**飞书后端实现**：如果使用飞书，步骤 3-5 的具体 API 调用见 [feishu-integration.md](assets/references/feishu-integration.md) 的「项目创建流程」章节。
 
-**前置检查**：先确认 PDCA 知识空间是否存在。
+### `ongoing` — 管理活跃项目
 
-```
-# 检查知识空间
-API: feishu_wiki_space.list
-如果返回中没有 "PDCA" 空间，先创建：
-API: feishu_wiki_space.create
-参数:
-  - name: "PDCA"
-```
+**流程**：
+1. **巡检**：按 [proactive-reminder.md](assets/references/proactive-reminder.md) 执行每日检查
+2. **状态更新**：评估完成度、计算偏差、判定状态（正常/预警/超时）
+3. **预警推送**：发现异常时发送预警消息，附带具体建议
+4. **阶段转换**：检查转换条件，用户确认后进入下一阶段
+5. **巡检参数更新**：阶段转换后更新巡检周期和预警阈值
 
-**⚠️ 使用 `feishu_wiki_space_node.create` 创建项目文件夹**：
+### `achieve` — 检索经验库
 
-```
-# 步骤 2.1：获取 PDCA 知识空间的根节点 token
-API: feishu_wiki_space.info
-参数:
-  - space_id: "<PDCA 知识空间 ID>"
-返回: space_node_token（作为父节点）
+**流程**：
+1. 分析当前问题的领域和类型
+2. 匹配历史项目中的相似案例
+3. 推荐最佳实践和模板
+4. 如果是制造场景，参考 [manufacturing-templates.md](assets/references/manufacturing-templates.md)
 
-# 步骤 2.2：创建项目文件夹
-API: feishu_wiki_space_node.create
-参数:
-  - space_id: "<PDCA 知识空间 ID>"
-  - parent_node_token: "<space_node_token>"
-  - title: "[项目名称]"
-  - obj_type: "folder"  # 指定为文件夹类型
-返回: node_token（项目文件夹的节点 ID）
-```
-
-**步骤 2.3：创建项目说明文档**（在项目文件夹下）：
-
-```
-API: feishu_create_doc
-参数:
-  - wiki_node: "<项目文件夹 node_token>"
-  - title: "项目说明"
-  - content: "# 项目信息\n..."
-返回: document_id, url
-```
-
-### 步骤 3：创建 Bitable 应用
-
-**⚠️ 前置检查**：确认 PDCA 知识空间是否存在，不存在则先创建。
-
-```
-API: feishu_bitable_app.create
-参数:
-  - name: "[项目名称] PDCA"
-返回: app_token, app_url
-```
-
-### 步骤 4：创建 4 张核心数据表
-
-为 Bitable 应用创建以下 4 张表，使用 `feishu_bitable_app_table.create`：
-
-| 表名 | 用途 |
-|------|------|
-| 项目主表 (projects) | 项目核心信息与状态管理 |
-| 任务数据表 (tasks) | 任务分解与执行跟踪 |
-| 数据收集记录表 (data_records) | 测量数据与指标记录 |
-| 执行日志表 (logs) | 过程记录与决策追溯 |
-
-**字段创建策略**（按兼容性排序）：
-1. **优先创建基本字段**：文本、数字、日期、多行文本（兼容性最好）
-2. **人员字段**：记录字段名，跳过创建，提示用户手动设置
-3. **单选字段**：先创建不带选项的字段，提示用户手动添加选项
-
-**⚠️ 已知 API 限制与降级策略**：
-
-| 字段类型 | 问题 | 降级策略 |
-|---------|------|---------|
-| 人员 (type=11) | API 写入报错 | 创建时跳过，记录"需手动设置负责人" |
-| 单选选项 (type=3) | update 添加选项失败 | 创建字段时不传 property，提示用户手动添加选项 |
-| 颜色 (color) | 必须是数字 0-54 | 使用 `{"name": "选项", "color": 0}` 格式 |
-| 超链接 (type=15) | 创建时传 property 报错 | 创建时不传 property |
-| 并发写入 | Bitable 不支持 | 串行调用，每次间隔 0.5-1 秒 |
-| 文档并发冲突 | 创建可能失败 | 失败时重试一次 |
-
-**基本字段格式**：
-- 文本 type=1
-- 数字 type=2
-- 单选 type=3
-- 日期 type=5（毫秒时间戳）
-- 人员 type=11（建议跳过，手动设置）
-- 多行文本 type=15
-
-详细字段定义见：[Bitable表结构定义.md](system/工具/Bitable表结构定义.md)
-
-### 步骤 5：创建项目文档
-
-**使用 `wiki_node` 参数在项目文件夹下创建文档**：
-
-```
-API: feishu_create_doc
-参数:
-  - wiki_node: "<项目文件夹 node_token>"  # 步骤 2.2 获取
-  - title: "Plan"
-  - content: "# 问题分析\n..."
-```
-
-**创建阶段子文件夹**（可选）：
-
-```
-# 如果需要在项目文件夹下创建 Plan 子文件夹
-API: feishu_wiki_space_node.create
-参数:
-  - space_id: "<PDCA 知识空间 ID>"
-  - parent_node_token: "<项目文件夹 node_token>"
-  - title: "Plan"
-  - obj_type: "folder"
-返回: plan_node_token
-
-# 然后在 Plan 文件夹下创建文档
-API: feishu_create_doc
-参数:
-  - wiki_node: "<plan_node_token>"
-  - title: "问题分析"
-  - content: "# 问题分析\n..."
-```
-
-### 步骤 6：创建项目甘特图
-
-使用 `feishu_create_doc` + `wiki_node` 在项目文件夹下创建甘特图：
-
-```
-API: feishu_create_doc
-参数:
-  - wiki_node: "<项目文件夹 node_token>"
-  - title: "项目甘特图"
-  - content: "<甘特图内容，包含任务、时间线、里程碑>"
-```
-
-甘特图应包含：
-- 项目阶段时间线（Plan/Do/Check/Act）
-- 关键任务节点
-- 里程碑日期
-- 负责人分配
-- 完成进度标记
-
-### 步骤 7：初始化项目主表记录
-
-**降级策略**：人员字段如果 API 写入失败，跳过该字段，记录"负责人需手动设置"。
-
-```
-API: feishu_bitable_app_table_record.create
-参数:
-  - app_token: "<步骤 3 获取>"
-  - table_id: "<项目主表ID>"
-  - fields:
-      项目ID: "<UUID>"
-      项目名称: "[项目名称]"
-      选择框架: "[选择的框架]"
-      当前阶段: "Plan"  # 不传 property，后续手动添加选项
-      状态: "正常"
-      # 负责人: [{id: "ou_<用户ID>"}]  # 跳过，API 写入可能报错
-      开始日期: <当前毫秒时间戳>
-      预计结束日期: <根据项目设定>
-      完成度: 0
-      文档链接: {link: "<项目主文档 URL>", text: "查看文档"}
-```
-
-**创建成功后，向用户报告**：
-- ✅ 项目主表记录已创建
-- ⚠️ 以下字段需要手动设置：负责人、当前阶段选项（Plan/Do/Check/Act）
-
-### 步骤 8：更新项目索引
-
-使用 `feishu_update_doc` 更新 PDCA 知识空间根目录的"项目索引.md"文档，添加新项目的状态条记录。
-
-**⚠️ 文档更新优先使用局部更新**（`replace_range`/`append`/`insert_before`/`insert_after`），慎用 `overwrite` 会丢失图片和评论。
-
-### 步骤 9：创建阶段任务和日程提醒
-
-**执行前先阅读**：[任务自动生成器.md](system/工具/任务自动生成器.md)、[feishu-integration.md](assets/references/feishu-integration.md)
-
-根据 Plan 阶段的执行计划，创建飞书任务和日历事件：
-
-**创建飞书任务**：
-```
-API: feishu_task_task.create
-参数:
-  - task_list_id: "<任务列表 ID>"
-  - title: "<任务名称>"
-  - description: "<任务描述>"
-  - due: <截止时间戳>
-  - assignee: [{id: "ou_<用户ID>"}]
-```
-
-为每个关键任务创建飞书任务，确保负责人收到提醒。
-
-**创建日历事件**（里程碑）：
-```
-API: feishu_calendar_event.create
-参数:
-  - calendar_id: "<日历 ID>"
-  - title: "<里程碑名称>"
-  - description: "<描述>"
-  - start_time: <开始时间戳>
-  - end_time: <结束时间戳>
-  - attendee_capabilities: [{user_id: "ou_<用户ID>"}]
-```
-
-为关键里程碑（如阶段转换日期、评审会议）创建日历事件。
-
-**创建巡检 Cron 任务**：
-```
-API: CronCreate
-参数:
-  - cron: "0 9 * * 1-5"  # 工作日每天 9:00
-  - prompt: "检查 [项目名称] 进度，更新 Bitable 状态"
-```
+---
 
 ## 渐进式披露：详细指南
 
 根据当前任务，阅读对应的参考文档：
 
-### 1. 飞书集成与主动驱动
+### 1. 主动巡检与驱动
+
+- **主动巡检行为规范**：见 [proactive-reminder.md](assets/references/proactive-reminder.md)
+- **定时任务配置**：见 [cron-driving.md](assets/references/cron-driving.md)
+
+### 2. 飞书集成（推荐后端）
 
 - **API 调用与工具配置**：见 [feishu-integration.md](assets/references/feishu-integration.md)
-- **自治巡检**：见 [cron-driving.md](assets/references/cron-driving.md)
-
-### 2. Bitable 原生架构（一个项目一个应用）
-
 - **表结构定义**：见 [Bitable表结构定义.md](system/工具/Bitable表结构定义.md)
 - **收集表配置**：见 [收集表配置指南.md](system/工具/收集表配置指南.md)
 - **仪表盘组件配置**：见 [仪表盘组件配置.md](system/工具/仪表盘组件配置.md)
 - **工作流自动化配置**：见 [工作流自动化配置.md](system/工具/工作流自动化配置.md)
 - **Bitable 应用文档模板**：见 [Bitable应用文档模板.md](system/工具/Bitable应用文档模板.md)
-- **OpenClow API 集成**：见 [OpenClow API集成.md](system/工具/OpenClow API集成.md)
 
-### 3. 各阶段执行 Agent
+### 3. 各阶段执行指南
 
-- **Plan 阶段 (规划/校验)**：见 [plan-agent.md](assets/references/plan-agent.md)
-- **Do 阶段 (执行/日志)**：见 [do-agent.md](assets/references/do-agent.md)
-- **Check 阶段 (数据/评估)**：见 [check-agent.md](assets/references/check-agent.md)
-- **Act 阶段 (决策/沉淀)**：见 [act-agent.md](assets/references/act-agent.md)
+- **Plan 阶段（规划/校验）**：见 [plan-agent.md](assets/references/plan-agent.md)
+- **Do 阶段（执行/日志）**：见 [do-agent.md](assets/references/do-agent.md)
+- **Check 阶段（数据/评估）**：见 [check-agent.md](assets/references/check-agent.md)
+- **Act 阶段（决策/沉淀）**：见 [act-agent.md](assets/references/act-agent.md)
 
-### 4. 质量与逻辑校验 (Validators)
+### 4. 质量与逻辑校验
 
-- **SMART 原则校验**：见 [transition-checklist.md](assets/references/transition-checklist.md)
-- **因果逻辑链审查**：见 [exception-handling.md](assets/references/exception-handling.md)
+- **SMART 原则校验**：见 [smart.md](system/规范/Validators/smart.md)
+- **因果逻辑链审查**：见 [logic.md](system/规范/Validators/logic.md)
+- **阶段转换检查**：见 [transition-checklist.md](assets/references/transition-checklist.md)
+- **异常处理**：见 [exception-handling.md](assets/references/exception-handling.md)
 
 ### 5. 制造场景模板与其他
 
 - **OEE/质量改善模板库**：见 [manufacturing-templates.md](assets/references/manufacturing-templates.md)
+- **仪表板模板**：见 [dashboard-templates.md](assets/references/dashboard-templates.md)
 - **任务自动生成**：见 [任务自动生成器.md](system/工具/任务自动生成器.md)
 - **智能巡检频率**：见 [智能巡检频率.md](system/工具/智能巡检频率.md)
 - **仪表板生成**：见 [仪表板生成器.md](system/工具/仪表板生成器.md)
 - **表单配置**：见 [表单配置生成器.md](system/工具/表单配置生成器.md)
-- **仪表板模板**：见 [dashboard-templates.md](assets/references/dashboard-templates.md)
+- **阶段转换检查表**：见 [阶段转换检查表.md](system/工具/阶段转换检查表.md)
 
-## 指令速查
+---
 
-| 指令 | 触发场景 | 输出 |
-|------|---------|------|
-| `new` | 启动新项目 | Wiki 文件夹 + 文档 + Bitable（4表）+ 甘特图 + 任务/日程 |
-| `ongoing` | 管理活跃项目 | 进度检查 + 状态更新 + 预警 |
-| `achieve` | 检索经验库 | 最佳实践推荐 + 模板匹配 |
-
-| API | 用途 |
-|-----|------|
-| `feishu_wiki_space.info` | 获取知识空间根节点 token |
-| `feishu_wiki_space_node.create` | 创建文件夹节点（obj_type="folder"） |
-| `feishu_bitable_app.create` | 创建 Bitable 应用 |
-| `feishu_bitable_app_table.create` | 创建数据表并定义字段 |
-| `feishu_bitable_app_table_record.create` | 插入数据记录 |
-| `feishu_bitable_app_table_record.update` | 更新数据记录 |
-| `feishu_bitable_app_table_record.search` | 搜索数据记录 |
-| `feishu_create_doc` | 创建 Wiki 文档（使用 wiki_node 指定父节点） |
-| `feishu_update_doc` | 更新 Wiki 文档内容 |
-| `feishu_task_task.create` | 创建飞书任务 |
-| `feishu_calendar_event.create` | 创建日历事件 |
+## 阶段概览
 
 | 阶段 | 核心交付物 | 校验标准 |
 |------|-----------|---------|
@@ -386,24 +195,22 @@ API: CronCreate
 | Check | 数据分析、效果评估、问题诊断 | 目标达成率 + 趋势分析 |
 | Act | 行动决策、实施方案、知识总结 | 决策矩阵 + SOP 沉淀 |
 
+---
+
 ## 核心规则
 
-1. **Wiki 专属存储**：所有项目必须在 Wiki 知识空间「PDCA」下创建，**禁止使用云空间**
-2. **数据事实来源**：飞书 Bitable 是项目状态的唯一事实来源
-3. **主动上报**：巡检发现逻辑偏差或进度停滞，立即发送交互式卡片
-4. **用户决策**：所有阶段转换和项目结项必须经过用户确认
-5. **SMART 校验和因果逻辑验证是强制的，不可跳过**
-6. **阶段转换严格按顺序，需要当前阶段所有必选任务完成**
+1. **SMART 校验和因果逻辑验证是强制的，不可跳过**
+2. **阶段转换严格按顺序**，需要当前阶段所有必选任务完成
+3. **所有阶段转换和项目结项必须经过用户确认**
+4. **巡检发现异常必须主动推送**，沉默的巡检等于没有巡检
+5. **项目数据的事实来源**由工具后端决定（飞书 Bitable / 本地文件 / 其他）
+6. **主动巡检是 Agent 的核心职责**，不是可选功能
 
 ## 通用 Red Flags
 
 出现以下信号时，**立即停止**：
-- **尝试在云空间创建项目** → 禁止！必须在 Wiki 知识空间「PDCA」下创建
-- **PDCA 知识空间不存在** → 先创建知识空间，再创建项目
-- **项目文件夹创建失败** → 检查 space_id、parent_node_token、obj_type 参数
-- **单选字段 color 用字符串** → color 必须是数字 0-54，不是字符串
-- **人员字段 API 写入失败** → 已知兼容性问题，记录下来手动设置
-- **文档创建并发冲突** → 重试一次，仍失败则报告错误
+
+### 方法论 Red Flags
 - 目标没有具体数字 → 回到 Plan，完成 SMART 校验
 - "执行中再调整" → 目标不够清晰
 - "快速补救一下" → 补救≠符合标准
@@ -411,29 +218,22 @@ API: CronCreate
 - "已经花了 X 周了" → 沉没成本不是跳过检查的理由
 - 直接接受用户提供的原因而不验证 → 用 MECE 框架逐维度扫描
 - 跳过某个 MECE 维度 → 必须有数据支持才能判定不相关
-- Bitable 创建失败 → 向用户报告错误，不要在错误位置创建文件
-- `wiki_space` 参数未配置 → 确认 PDCA 知识空间 ID 已配置
+
+### 巡检 Red Flags
+- 连续多天没有发送巡检消息 → 巡检机制可能失效
+- 巡检只报"一切正常"但完成度没有变化 → 数据可能不准确
+- 用户长期不响应 → 考虑降低频率或询问是否暂停
 
 ## Rationalization 防御
 
 | 借口 | 现实 |
 |------|------|
-| "云空间创建更方便" | 禁止！PDCA 项目必须在 Wiki 知识空间管理，使用 feishu_wiki_space_node.create 创建文件夹 |
-| "字段创建太复杂，跳过吧" | 字段创建失败不影响项目继续，记录下来后续手动补充 |
-| "API 写入失败，整个项目重来" | 不需要！已知兼容性问题（人员字段、单选选项），手动设置即可 |
-| "Bitable 创建太复杂，先建文档" | 文档无法做数据管理，没有 Bitable 的核心功能就失去 PDCA 系统的价值 |
-| "用户急着要，我先建文档" | 文档不等于项目管理系统，匆忙创建错误结构更难修复 |
 | "MECE 太复杂，简单问一下就行" | 简单提问 = 遗漏关键因素，后期返工更浪费时间 |
-| "选项已经覆盖所有情况了" | 你无法预知所有情况，必须有 Other 选项 |
+| "选项已经覆盖所有情况了" | 你无法预知所有情况，必须有自定义选项 |
 | "用户已经说了原因，不需要再分析" | 用户说的是症状，不是根因 |
 | "单选就够了" | 现实中问题往往是多因素导致的，限制用户只能选一个会遗漏原因 |
-| "整篇 overwrite 覆盖更快" | overwrite 会清空文档重写，丢失图片、评论、协作历史 |
 | "简单项目不需要完整的 PDCA 结构" | 简单项目也需要完整的 PDCA 结构，才能保证质量 |
+| "每天发消息太打扰了" | 连续 3 天状态相同时自动降为摘要模式，状态变化时才发详情 |
+| "巡检发现了问题但用户没回复" | 发送预警就够了，尊重用户的节奏，不要催促 |
 
 **Violating the letter of the rules is violating the spirit of the rules.**
-
-## 关键指令集
-
-- **`new`**：初始化新项目
-- **`ongoing`**：管理活跃项目
-- **`achieve`**：检索经验库

@@ -6,11 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述 / Project Overview
 
-**PDCA-with-AI** 是一个基于 PDCA 循环的 AI 驱动型工作流系统，专为 **OpenClaw + 飞书（Feishu/Lark）** 深度集成设计。
+**PDCA-with-AI** 是一个基于 PDCA 循环的 AI 驱动型工作流系统，**平台无关**（Platform-Agnostic）。AI Agent 层不绑定任何特定平台，飞书（Feishu/Lark）作为推荐深度集成后端。
 
 **核心特点**：
 - 非 traditional 软件代码库，主要由 markdown 文件定义 AI agents、workflows 和 templates
-- 深度依赖飞书 API（Wiki、Bitable、Calendar、Task、Sheet）
+- Agent 层平台无关，飞书集成作为可选但推荐的后端（详见 `assets/references/feishu-integration.md`）
+- **主动巡检**（Proactive Inspection）：AI 定期检查项目健康度，主动提醒用户
 - 遵循 [superpowers:writing-skills](https://github.com/obra/superpowers) 标准
 
 ---
@@ -30,17 +31,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 PDCA-with-AI/
-├── SKILL.md            # OpenClaw/Gemini 技能入口（主要文件）
-├── .claude/skills/     # Claude Code 参考文档（非执行）
-├── assets/             # 详细文档与测试
-│   ├── references/     # 飞书 API 集成指南
+├── SKILL.md            # 技能入口（AI Agent 读取此文件）
+├── CLAUDE.md           # 开发指南（本文件）
+├── assets/             # 详细文档与资源
+│   ├── references/     # 参考文档（飞书集成、MECE框架、阶段检查表等）
 │   ├── tests/          # 基线测试与质量验证
 │   └── templates/      # 项目模板
-├── system/             # 核心引擎层
-│   ├── Agent/          # Plan/Do/Check/Act Agent 提示词
+├── system/             # 系统规范
 │   ├── 规范/            # SMART 校验与因果逻辑模组
-│   ├── 工具/            # Bitable 配置、工作流等
-│   └── 模板/            # 系统模板
+│   │   └── Validators/  # 验证器（logic.md, smart.md）
+│   └── 工具/            # 工具配置（按后端分目录）
+│       ├── feishu/     # 飞书/Bitable 专用配置
+│       └── 智能巡检频率.md
 ├── bin/                # npx 可执行文件
 ├── package.json        # npm 包配置
 └── README.md           # 项目说明（中/英/日）
@@ -54,16 +56,19 @@ PDCA-with-AI/
 
 ## 核心依赖 / Core Dependencies
 
-### 必需平台 / Required Platform
+### 推荐后端 / Recommended Backend
 
-| 组件 | 说明 | 获取方式 |
-|------|------|---------|
-| **OpenClaw** | AI CLI 框架 | https://github.com/open-claw/open-claw |
-| **飞书插件** | 提供 feishu-* API | OpenClaw 官方插件 |
+| 组件 | 说明 | 备注 |
+|------|------|------|
+| **飞书（Feishu/Lark）** | 推荐深度集成后端 | 提供 Wiki、Bitable、Calendar、Task 等能力 |
+| **OpenClaw + 飞书插件** | 原始支持平台 | 通过 feishu-* API 实现集成 |
+| **Hermes Agent** | 已验证可用的 Agent 平台 | 通过 MCP/工具调用实现集成 |
 
-### 关键 API 列表
+> **平台无关原则**：Agent 层不依赖特定平台。飞书是推荐后端但非必需——最小可用模式下，Agent 可使用本地文件系统、消息通知等通用能力运行。
 
-本技能包依赖以下飞书 API（**仅 OpenClaw 飞书插件提供**）：
+### 关键 API 列表（飞书后端）
+
+以下 API 仅在使用飞书后端时需要：
 
 | API | 功能 |
 |-----|------|
@@ -92,16 +97,16 @@ PDCA-with-AI/
 
 阶段转换**严格按顺序**，需要：
 1. 当前阶段所有必选任务完成
-2. 对照 `system/工具/阶段转换检查表.md` 验证
-3. 用户通过飞书交互式卡片确认
+2. 对照 `assets/references/阶段转换检查表.md` 验证
+3. 用户确认（通过当前平台的消息机制）
 
 ### The Loop（自治巡检）
 
 PDCA 控制器运行的 4 步巡检循环：
-1. **Scrape (Wiki)**：获取所有项目文档
+1. **Scrape**：获取所有项目文档（来源由后端决定）
 2. **Load (Logic)**：加载阶段特定的"必需条件"和"交付物清单"
-3. **Verify**：对比 Wiki 内容与要求，识别差距或逻辑冲突
-4. **Message (Card)**：发送飞书交互式卡片（绿/黄/红基于严重程度）
+3. **Verify**：对比文档内容与要求，识别差距或逻辑冲突
+4. **Message**：发送通知（通过当前平台的消息机制，严重程度用颜色区分）
 
 ---
 
@@ -129,9 +134,9 @@ PDCA 控制器运行的 4 步巡检循环：
 
 ## 重要约束 / Important Constraints
 
-1. **Single Source of Truth**：飞书 Bitable 是项目状态的唯一权威数据源
+1. **Single Source of Truth**：项目状态的事实来源（Fact Source）由工具后端决定，同一项目内保持一致
 2. **User Decision Required**：所有阶段转换和项目结项需用户确认
-3. **Immediate Alerting**：巡检发现逻辑偏差或进度停滞，立即发送飞书交互式卡片
+3. **Immediate Alerting**：巡检发现逻辑偏差或进度停滞，立即通过当前平台通知用户
 4. **No Shortcuts**：SMART 校验和因果逻辑验证是强制的，不可跳过
 
 ---
@@ -202,6 +207,7 @@ PDCA 控制器运行的 4 步巡检循环：
 | 版本 | 日期 | 变更 |
 |------|------|------|
 | v1.0.9 | 2026-04-06 | 添加 OpenClaw 对比表格，说明 Lark-CLI 可能性 |
+| **v2.0.0** | **2026-04-12** | **平台无关化重构**：Agent 层解绑 OpenClaw，飞书作为推荐后端；新增主动巡检规范；文件重组 |
 | v1.0.8 | 2026-04-06 | 说明为什么需要 OpenClaw + 飞书 |
 | v1.0.7 | 2026-04-06 | 添加中/英/日多语言 README |
 | v1.0.6 | 2026-04-06 | 添加 Claude Code 技能支持 |
@@ -221,4 +227,4 @@ npm run release:major   # 主要版本 (1.0.9 → 2.0.0)
 
 ---
 
-**Designed for OpenClaw + Feishu** / **专为 OpenClaw + 飞书设计**
+**Platform-Agnostic PDCA Skill** / **平台无关的 PDCA 技能** / **プラットフォーム非依存の PDCA スキル**
