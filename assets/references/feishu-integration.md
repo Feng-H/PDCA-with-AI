@@ -307,6 +307,18 @@ PDCA知识空间（space_id 已在 SKILL.md 中记录）
 
 用于推送预警信息和交互确认。
 
+> 📖 **详细指南**：交互式卡片模板与回调处理详见 [feishu-interaction.md](feishu-interaction.md)，包含 4 种场景卡片模板（多选、单选、预警、巡检摘要）和回调数据设计规范。
+
+### 当前可用状态
+
+| 功能 | 状态 | 说明 |
+|------|------|------|
+| 发送预警卡片 | ⚠️ 不可用 | Agent 层无法直接调用卡片发送 API |
+| 按钮回调路由 | ✅ 平台支持 | Hermes 飞书适配器已实现 card_action → synthetic COMMAND |
+| P2 文本编号交互 | ✅ 推荐使用 | Agent 通过富文本发送选项，用户回复编号 |
+
+**实际推荐**：当前 PDCA 在飞书上的用户交互统一使用 **P2 富文本编号列表**（见 [feishu-interaction.md](feishu-interaction.md)「当前可用的交互方式」章节）。
+
 ### 卡片 JSON 模板 (feishu-card)
 
 ```json
