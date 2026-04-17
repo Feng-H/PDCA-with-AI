@@ -303,18 +303,67 @@ PDCA知识空间（space_id 已在 SKILL.md 中记录）
     4. **更新记录**：调用 `feishu_bitable_app_table_record.update` 更新「完成度」和「状态」字段。
 - ⚠️ **「剩余天数」不由公式计算**（Bitable 不支持公式字段），由 AI 每次巡检时计算后写入
 
-## 3. 飞书用户交互（当前可用方案）
+## 3. 飞书用户交互
 
-### 飞书 Channel 网关模式（OpenClaw / Hermes Agent）
+### OpenClaw + openclaw-lark 插件（推荐）
 
-**当前可用方案**：P2 富文本编号列表
+**官方插件**：[openclaw-lark](https://github.com/larksuite/openclaw-lark)
 
-在飞书 channel 网关模式下（通过飞书机器人与用户交互）：
-- ❌ `clarify` 工具**不可用**（网关模式无法弹出原生选择框）
-- ❌ Interactive Card **当前 Agent 层无法直接发送**（需要平台适配器支持）
-- ✅ **富文本编号列表**：唯一当前可用的交互方式
+OpenClaw 官方飞书插件提供了 `feishu_ask_user_question` 工具，支持完整的交互式卡片功能。
 
-**格式规范**：
+#### 工具特性
+
+| 特性 | 说明 |
+|------|------|
+| **CardKit v2** | 使用飞书最新卡片规范 |
+| **Form 容器** | 表单类型，支持用户输入和提交 |
+| **交互类型** | 文本输入、单选下拉、多选下拉 |
+| **多问题支持** | 单次调用最多 4 个问题 |
+| **回调机制** | 用户提交后注入 synthetic message |
+
+#### 调用示例
+
+```javascript
+// MECE 维度多选
+feishu_ask_user_question({
+  questions: [{
+    question: "**请选择导致问题的主要因素（可多选）**：",
+    header: "根因分析",
+    options: [
+      { label: "🔧 设备/机器", description: "设备故障、老化、维护不当" },
+      { label: "👤 人员/技能", description: "培训不足、流动性大" },
+      { label: "📐 工艺/方法", description: "流程不合理、标准缺失" },
+      { label: "📦 材料/物料", description: "原料质量、供应不稳定" },
+      { label: "🌍 环境/条件", description: "温湿度、照明、噪音" }
+    ],
+    multiSelect: true
+  }]
+})
+
+// 阶段转换单选
+feishu_ask_user_question({
+  questions: [{
+    question: "**请确认是否可以进行阶段转换**：\n- 必选任务完成率：100%\n- 交付物检查：通过",
+    header: "阶段转换",
+    options: [
+      { label: "✅ 确认转换", description: "所有必选任务已完成" },
+      { label: "⏳ 延期", description: "需要更多时间" },
+      { label: "❌ 返回", description: "返回当前阶段" }
+    ],
+    multiSelect: false
+  }]
+})
+```
+
+> 📖 **详细指南**：完整参数说明、交互类型对照表、更多示例见 [feishu-interaction.md](feishu-interaction.md)
+
+### Hermes Agent 飞书适配器
+
+**当前状态**：无官方交互式卡片支持
+
+**可用方案**：P2 富文本编号列表
+
+#### 格式规范
 
 ```markdown
 **📋 [问题标题]**
@@ -332,28 +381,25 @@ PDCA知识空间（space_id 已在 SKILL.md 中记录）
 💡 输入编号选择，多个选项用逗号分隔（如 1,3,5）
 ```
 
-**Agent 处理流程**：
+#### Agent 处理流程
+
 1. 基于 MECE 框架生成选项内容
 2. 使用 P2 格式通过 `send_message` 发送到飞书对话
 3. 用户输入编号（如 `1,3,5` 或 `其他：员工流动性大`）
 4. Agent 解析编号映射到选项内容
 5. 确认选择并推进流程
 
-### 交互式卡片（未来集成）
+### 平台对照表
 
-用于推送预警信息和交互确认。
+| 平台 | 首选方案 | 备选方案 | 说明 |
+|------|---------|---------|------|
+| OpenClaw + openclaw-lark | `feishu_ask_user_question` | P2 文本编号 | 官方插件，完整卡片支持 |
+| Hermes Agent 飞书 | P2 文本编号 | - | 无卡片支持 |
+| OpenClaw CLI | `clarify` 工具 | P2 文本编号 | 原生交互 |
 
-> 📖 **详细指南**：交互式卡片模板与回调处理详见 [feishu-interaction.md](feishu-interaction.md)，包含 4 种场景卡片模板（多选、单选、预警、巡检摘要）和回调数据设计规范。
+### 卡片 JSON 模板（供未来扩展）
 
-### 未来可用状态（待平台支持）
-
-| 功能 | 状态 | 说明 |
-|------|------|------|
-| 发送预警卡片 | ⚠️ 不可用 | Agent 层无法直接调用卡片发送 API |
-| 按钮回调路由 | ✅ 平台支持 | Hermes 飞书适配器已实现 card_action → synthetic COMMAND |
-| P2 文本编号交互 | ✅ 推荐使用 | Agent 通过富文本发送选项，用户回复编号 |
-
-### 卡片 JSON 模板 (feishu-card)
+以下模板供需要直接发送原始卡片时使用（需平台支持）：
 
 ```json
 {

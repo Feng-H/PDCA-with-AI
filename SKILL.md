@@ -108,21 +108,115 @@ description: |
 
 不同平台对交互组件的支持不同。Agent 必须根据当前运行平台的能力，自动选择最优的交互方式。**选项内容不变（MECE 原则），变化的只是呈现载体。**
 
-#### 飞书 Channel 网关模式（OpenClaw / Hermes Agent）
+#### 飞书 Channel 网关模式（OpenClaw + openclaw-lark 插件）
 
-**当前可用方案**：P2 富文本编号列表
+**当前可用方案**：P1 交互式卡片 → P2 富文本编号列表
 
-在飞书 channel 网关模式下（通过飞书机器人与用户交互）：
-- ❌ `clarify` 工具**不可用**（网关模式无法弹出原生选择框）
-- ❌ Interactive Card **当前 Agent 层无法直接发送**（需要平台适配器支持，未来集成用）
-- ✅ **富文本编号列表**：唯一当前可用的交互方式
+**⭐ 推荐：`feishu_ask_user_question` 工具**
 
-**格式规范**：
+OpenClaw 官方的 [openclaw-lark 插件](https://github.com/larksuite/openclaw-lark) 提供了 `feishu_ask_user_question` 工具，支持完整的交互式卡片功能。
+
+**工具参数结构**：
+
+```javascript
+{
+  questions: [
+    {
+      question: "问题文本（支持 lark_md 格式）",
+      header: "短标签（最多12字符，如：'根因分析'）",
+      options: [           // 空数组 = 文本输入，有内容 = 下拉选择
+        { label: "选项A", description: "补充说明" },
+        { label: "选项B", description: "补充说明" }
+        // ...
+      ],
+      multiSelect: false   // 单选 = false，多选 = true
+    }
+    // 最多4个问题
+  ]
+}
+```
+
+**交互类型**：
+
+| options 配置 | multiSelect | 交互类型 | 适用场景 |
+|-------------|-------------|---------|---------|
+| `[]` | - | 文本输入框 | 自定义输入 |
+| 有内容 | `false` | 单选下拉 | 确认/决策 |
+| 有内容 | `true` | 多选下拉 | MECE 维度选择 |
+| 不传 | - | 文本输入 | 默认行为 |
+
+**交互流程**：
+
+```
+1. Agent 调用 feishu_ask_user_question
+   ↓
+2. 发送 CardKit v2 卡片（Form 容器 + form_action_type: "submit"）
+   ↓
+3. 工具返回 { status: 'pending' }
+   ↓
+4. 用户填写并提交
+   ↓
+5. 系统注入 synthetic message（用户答案）
+   ↓
+6. Agent 继续处理，答案已包含在消息上下文中
+```
+
+**调用示例**：
+
+```javascript
+// 单选示例：阶段转换确认
+feishu_ask_user_question({
+  questions: [{
+    question: "**项目**：挖掘机臂架开裂改善\n**阶段**：Plan → Do\n\n请确认是否可以进行阶段转换：",
+    header: "阶段转换",
+    options: [
+      { label: "✅ 确认转换", description: "所有必选任务已完成" },
+      { label: "⏳ 延期", description: "需要更多时间" },
+      { label: "❌ 返回", description: "返回当前阶段" }
+    ],
+    multiSelect: false
+  }]
+})
+
+// 多选示例：MECE 维度选择
+feishu_ask_user_question({
+  questions: [{
+    question: "**请选择导致问题的主要因素（可多选）**：",
+    header: "根因分析",
+    options: [
+      { label: "🔧 设备/机器", description: "设备故障、老化、维护不当" },
+      { label: "👤 人员/技能", description: "培训不足、流动性大" },
+      { label: "📐 工艺/方法", description: "流程不合理、标准缺失" },
+      { label: "📦 材料/物料", description: "原料质量、供应不稳定" },
+      { label: "🌍 环境/条件", description: "温湿度、照明、噪音" }
+    ],
+    multiSelect: true
+  }]
+})
+
+// 文本输入示例：自定义补充
+feishu_ask_user_question({
+  questions: [{
+    question: "**请描述您的具体情况**：",
+    header: "补充说明",
+    options: []  // 空数组 = 文本输入框
+  }]
+})
+```
+
+**重要约束**：
+- 最多 4 个问题
+- header 最多 12 字符
+- 提交后会触发 synthetic message，Agent 需要从消息上下文中获取答案
+
+**备选方案：P2 富文本编号列表**
+
+当 `feishu_ask_user_question` 不可用时，使用文本编号列表作为 fallback：
 
 ```markdown
 **📋 [问题标题]**
 
-[1-2 句背景说明，说明为什么问这个问题]
+[1-2 句背景说明]
 
 请选择（可多选）：
 
@@ -130,19 +224,12 @@ description: |
 2️⃣ **选项 B** — 补充说明
 3️⃣ **选项 C** — 补充说明
 4️⃣ **选项 D** — 补充说明
-5️⃣ 其他（请描述您的具体情况）
+5️⃣ 其他（请描述）
 
 💡 输入编号选择，多个选项用逗号分隔（如 1,3,5）
 ```
 
-**Agent 处理流程**：
-1. 基于 MECE 框架生成选项内容
-2. 使用 P2 格式通过 `send_message` 发送到飞书对话
-3. 用户输入编号（如 `1,3,5` 或 `其他：员工流动性大`）
-4. Agent 解析编号映射到选项内容
-5. 确认选择并推进流程
-
-> 📖 **详细模板**：Interactive Card JSON 模板供未来集成使用，见 [feishu-interaction.md](assets/references/feishu-interaction.md)
+> 📖 **详细指南**：更多 CardKit v2 卡片模板和回调处理，见 [feishu-interaction.md](assets/references/feishu-interaction.md)
 
 #### CLI 模式（Hermes / OpenClaw 命令行）
 
@@ -164,8 +251,8 @@ description: |
 
 | 运行模式 | 首选方案 | 备选方案 | 说明 |
 |---------|---------|---------|------|
-| **OpenClaw 飞书 channel** | P2 文本编号列表 | - | 网关模式，仅此可用 |
-| **Hermes Agent 飞书** | P2 文本编号列表 | - | 网关模式，仅此可用 |
+| **OpenClaw 飞书 channel** | P1 `feishu_ask_user_question` | P2 文本编号列表 | openclaw-lark 插件支持 |
+| **Hermes Agent 飞书** | P2 文本编号列表 | - | 网关模式，使用文本编号 |
 | **OpenClaw CLI** | P0 clarify 工具 | P2 文本编号列表 | 原生交互可用 |
 | **Hermes CLI** | P0 clarify 工具 | P2 文本编号列表 | 原生交互可用 |
 | **其他平台** | 平台原生组件 | P2 文本编号列表 | 根据平台能力判断 |
@@ -202,9 +289,8 @@ description: |
 #### 交互 Red Flags
 
 - 所有平台一律用纯文本长问句 → 没有检测平台能力，应使用结构化选项
-- 飞书 channel 尝试使用 `clarify` 工具 → 该工具在网关模式下不可用
-- 飞书 channel 尝试直接发送 Interactive Card → 当前 Agent 层无法直接调用卡片 API
-- 提供选项但用户不知道怎么选（没有说明操作方式）→ 缺少"输入编号选择"的操作提示
+- OpenClaw 飞书 channel 不使用 `feishu_ask_user_question` → 该工具可用且是推荐方案
+- 提供选项但用户不知道怎么选（没有说明操作方式）→ 缺少操作提示
 
 ---
 
