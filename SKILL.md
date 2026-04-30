@@ -1,6 +1,6 @@
 ---
 name: pdca
-version: 2.0.0
+version: 6.0.5
 description: |
   AI-driven PDCA project management with proactive inspection. Use for: project setup (new), active project tracking (ongoing), experience retrieval (achieve), PDCA cycles, SMART goal validation, quality improvement (OEE, defects), manufacturing optimization, or structured problem-solving. Supports Feishu/Lark as integrated backend for Bitable + Wiki + Calendar + Task. Works on any AI Agent platform (OpenClaw, Hermes Agent, Claude Code, etc.).
 ---
